@@ -32,6 +32,11 @@ export function getDb() {
   return instance;
 }
 
+// Lets tests point the application at an in-memory database.
+export function setDb(db) {
+  instance = db;
+}
+
 export function closeDb() {
   if (instance) {
     instance.close();

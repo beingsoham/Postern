@@ -1,5 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 
 import { config } from './config.js';
 import { healthRouter } from './routes/health.js';
@@ -20,9 +22,48 @@ export function createApp() {
   app.set('trust proxy', 1);
   app.disable('x-powered-by');
 
+  // Security headers. The API serves JSON only, so the content policy can be
+  // as tight as it goes.
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: { defaultSrc: ["'none'"], frameAncestors: ["'none'"] },
+      },
+      crossOriginResourcePolicy: { policy: 'same-site' },
+    }),
+  );
+
   // Only the client origin may call the API from a browser.
   app.use(cors({ origin: config.clientOrigin }));
   app.use(express.json({ limit: config.jsonBodyLimit }));
+
+  // A local app still gets a ceiling: a runaway script or a stuck retry loop
+  // should not be able to hammer the model. Disabled under test so the suite
+  // is not rate limited by its own speed.
+  if (!config.isTest) {
+    app.use(
+      '/api',
+      rateLimit({
+        windowMs: 60_000,
+        limit: 240,
+        standardHeaders: 'draft-7',
+        legacyHeaders: false,
+        message: { error: { code: 'rate_limited', message: 'Too many requests' } },
+      }),
+    );
+
+    // Analysis is far more expensive than a read, so it gets its own ceiling.
+    app.use(
+      ['/api/analyze-all', '/api/emails/:id/analyze', '/api/emails/:id/drafts'],
+      rateLimit({
+        windowMs: 60_000,
+        limit: 30,
+        standardHeaders: 'draft-7',
+        legacyHeaders: false,
+        message: { error: { code: 'rate_limited', message: 'Too many analysis requests' } },
+      }),
+    );
+  }
 
   app.use('/api', healthRouter);
   app.use('/api', emailsRouter);

@@ -236,13 +236,42 @@ CASCADE` to every derived table.
 ## Testing
 
 ```bash
-npm test
+npm test               # 93 tests, no model required
+npm run test:coverage  # server coverage report
 ```
 
-27 tests covering priority scoring, date parsing and ambiguity, bulk-mail
-detection, embedded prompt injection, the API error contract, and the doctor
-report. **No test requires Ollama** — CI runs with the endpoint pointed at a
-dead port, so a pull request never downloads a model.
+**93 tests** — 74 server, 19 client — covering:
+
+| Area          | What is asserted                                                                                                                                                         |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Rule engine   | Scoring, categories, context beating keywords, bare adverbs not being deadlines                                                                                          |
+| Dates         | Weekday resolution against the email timestamp, `03/04` reported ambiguous                                                                                               |
+| API           | Pagination, filters, the page-size cap, 400 and 404 shapes, user overrides                                                                                               |
+| Ollama client | Request shape, retry on malformed output, timeout, unreachable, HTTP errors                                                                                              |
+| Idempotency   | Analyzing an email twice creates no duplicate task, and keeps one you completed                                                                                          |
+| Security      | Injected email still yields a valid classification and nothing extra; bodies absent from logs; no stack traces; CSP and `nosniff` present; SQL injection treated as text |
+| Client        | Priority always carries a text label, DOMPurify strips scripts, handlers and remote images, task completion, empty states                                                |
+
+**No test requires Ollama.** CI points `OLLAMA_URL` at a dead port, so a pull
+request never downloads a model — and the suite proves the app works without one.
+
+Server coverage is **88% of statements, 90% of lines**.
+
+### What is not tested
+
+Stated plainly, because a coverage number alone is misleading:
+
+- **The page components** — `Briefing`, `Inbox`, `Tasks`, `FollowUps` and
+  `Settings`. The reusable components they are built from are tested; the pages
+  that wire them together are not.
+- **No end-to-end test.** Nothing drives a real browser through a real analysis.
+  That path has been exercised by hand, not automatically.
+- **The follow-up status route** (`PATCH /api/follow-ups/:id`) — detection is
+  covered, updating a status is not.
+- **Real model output.** Every test that involves the model mocks it. What a
+  given Qwen build actually returns is measured by `npm run eval`, not asserted
+  in a test, because it is not deterministic enough to assert.
+- **Gmail.** It does not exist yet.
 
 ## Code graph
 

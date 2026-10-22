@@ -24,7 +24,8 @@
     "doctor": "node --env-file-if-exists=.env cli/doctor.js",
     "eval": "npm run eval --workspace=server",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test:coverage": "npm run test:coverage --workspace=server"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

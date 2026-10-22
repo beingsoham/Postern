@@ -4,6 +4,12 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  test: {
+    environment: 'jsdom',
+    globals: false,
+    setupFiles: ['./tests/setup.js'],
+    include: ['tests/**/*.test.jsx'],
+  },
   server: {
     port: 5173,
     // The client talks to /api and Vite forwards it, so there is one origin
