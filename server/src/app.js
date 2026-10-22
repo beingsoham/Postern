@@ -3,6 +3,9 @@ import cors from 'cors';
 
 import { config } from './config.js';
 import { healthRouter } from './routes/health.js';
+import { emailsRouter } from './routes/emails.js';
+import { tasksRouter } from './routes/tasks.js';
+import { followUpsRouter } from './routes/followUps.js';
 import { notFound } from './middleware/notFound.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
@@ -19,6 +22,9 @@ export function createApp() {
   app.use(express.json({ limit: config.jsonBodyLimit }));
 
   app.use('/api', healthRouter);
+  app.use('/api', emailsRouter);
+  app.use('/api', tasksRouter);
+  app.use('/api', followUpsRouter);
 
   // Order matters: unmatched route first, then the single error handler.
   app.use(notFound);
