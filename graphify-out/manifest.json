@@ -1,0 +1,212 @@
+{
+  "client/package.json": {
+    "mtime": 1792658937.4191566,
+    "seen": 1792661763.026824,
+    "ast_hash": "ace523c589fd7057e7eb039b497a72aa",
+    "semantic_hash": ""
+  },
+  "client/src/App.jsx": {
+    "mtime": 1792659071.3871477,
+    "seen": 1792661763.0268333,
+    "ast_hash": "c17f5ba67431f12d93d4df706649400d",
+    "semantic_hash": ""
+  },
+  "client/src/components/AppShell.jsx": {
+    "mtime": 1792659015.1611514,
+    "seen": 1792661763.0268407,
+    "ast_hash": "27598ef70dba7da71a9e1262eca91c83",
+    "semantic_hash": ""
+  },
+  "client/src/components/Button.jsx": {
+    "mtime": 1792658980.7111535,
+    "seen": 1792661763.0268455,
+    "ast_hash": "50f65a9864bcfb1aae10b277c844074d",
+    "semantic_hash": ""
+  },
+  "client/src/components/Card.jsx": {
+    "mtime": 1792658980.7151537,
+    "seen": 1792661763.0268493,
+    "ast_hash": "984533dc07c4e1aab9bfb173555e1a74",
+    "semantic_hash": ""
+  },
+  "client/src/components/DemoBadge.jsx": {
+    "mtime": 1792659003.3251522,
+    "seen": 1792661763.0268528,
+    "ast_hash": "5470c82a7ef7dd5b5807a6cecb4c466a",
+    "semantic_hash": ""
+  },
+  "client/src/components/EmptyState.jsx": {
+    "mtime": 1792659003.323152,
+    "seen": 1792661763.0268567,
+    "ast_hash": "ecf78e13c9bc6893be04ed985da5ef5d",
+    "semantic_hash": ""
+  },
+  "client/src/components/PriorityBadge.jsx": {
+    "mtime": 1792659003.313152,
+    "seen": 1792661763.0268621,
+    "ast_hash": "3bb8d2c68d8945a0f80fb39b9a0c7a74",
+    "semantic_hash": ""
+  },
+  "client/src/components/ReasonChip.jsx": {
+    "mtime": 1792659003.316152,
+    "seen": 1792661763.0268652,
+    "ast_hash": "6dece691e6f9b0e780392274964e4cdf",
+    "semantic_hash": ""
+  },
+  "client/src/components/Skeleton.jsx": {
+    "mtime": 1792659003.320152,
+    "seen": 1792661763.026868,
+    "ast_hash": "18213e978608c8678c8745e51b9c2652",
+    "semantic_hash": ""
+  },
+  "client/src/components/StatusPill.jsx": {
+    "mtime": 1792659003.3181522,
+    "seen": 1792661763.0268712,
+    "ast_hash": "5ca52cbde080e44969566adb26b87e48",
+    "semantic_hash": ""
+  },
+  "client/src/components/cn.js": {
+    "mtime": 1792658980.7101536,
+    "seen": 1792661763.0268755,
+    "ast_hash": "7fc854526de8549f1561395bcdcdfbf6",
+    "semantic_hash": ""
+  },
+  "client/src/components/index.js": {
+    "mtime": 1792659003.327152,
+    "seen": 1792661763.026878,
+    "ast_hash": "52a7c0c81df51cffe1693c2de941f229",
+    "semantic_hash": ""
+  },
+  "client/src/hooks/useAiStatus.js": {
+    "mtime": 1792659060.9945693,
+    "seen": 1792661763.026881,
+    "ast_hash": "aa3a7f759965b0d47ecfe758f2751fdb",
+    "semantic_hash": ""
+  },
+  "client/src/main.jsx": {
+    "mtime": 1792659071.3901477,
+    "seen": 1792661763.0268836,
+    "ast_hash": "6fb9668c508dd58e2fbb54cae40e4932",
+    "semantic_hash": ""
+  },
+  "client/src/pages/DesignSystem.jsx": {
+    "mtime": 1792659039.4811497,
+    "seen": 1792661763.0268867,
+    "ast_hash": "8145128d0c9da62e01e6c589c2e4c5bb",
+    "semantic_hash": ""
+  },
+  "client/src/pages/Placeholder.jsx": {
+    "mtime": 1792659015.1631513,
+    "seen": 1792661763.0268898,
+    "ast_hash": "75432653eb9c7259915ea37fd643ac98",
+    "semantic_hash": ""
+  },
+  "client/vite.config.js": {
+    "mtime": 1792658631.6581764,
+    "seen": 1792661763.0268927,
+    "ast_hash": "be3f35f2c1fcfd28957191909080d833",
+    "semantic_hash": ""
+  },
+  "eslint.config.js": {
+    "mtime": 1792661962.7056546,
+    "seen": 1792661988.7368252,
+    "ast_hash": "8b509ff56af8c51c8466d7ee42de90d4",
+    "semantic_hash": ""
+  },
+  "package.json": {
+    "mtime": 1792661912.0629613,
+    "seen": 1792661988.736829,
+    "ast_hash": "5eaba9a0df5954838e4aa278625d5165",
+    "semantic_hash": ""
+  },
+  "server/package.json": {
+    "mtime": 1792661912.0629613,
+    "seen": 1792661988.7368314,
+    "ast_hash": "68c4f4d97522e750d79714f9f29dd0e8",
+    "semantic_hash": ""
+  },
+  "server/src/app.js": {
+    "mtime": 1792658621.3311772,
+    "seen": 1792661763.0269039,
+    "ast_hash": "ad63b97f1fe5bb1615f1bf0e212fd0c4",
+    "semantic_hash": ""
+  },
+  "server/src/config.js": {
+    "mtime": 1792661947.85351,
+    "seen": 1792661988.7369108,
+    "ast_hash": "71b58e504c827ad4c1349c6e03a639d0",
+    "semantic_hash": ""
+  },
+  "server/src/db/db.js": {
+    "mtime": 1792661568.9489837,
+    "seen": 1792661763.0269103,
+    "ast_hash": "d484ce134f0b8cbfe7e7c337a29aa91b",
+    "semantic_hash": ""
+  },
+  "server/src/db/queries.js": {
+    "mtime": 1792661568.9519837,
+    "seen": 1792661763.0269127,
+    "ast_hash": "835e977938b22d0f0f7748bac913a84e",
+    "semantic_hash": ""
+  },
+  "server/src/db/seed.js": {
+    "mtime": 1792661668.3709772,
+    "seen": 1792661763.026915,
+    "ast_hash": "7fca1c6d47d9ac21118aa4d67d4b42b7",
+    "semantic_hash": ""
+  },
+  "server/src/errors.js": {
+    "mtime": 1792658609.068178,
+    "seen": 1792661763.0269175,
+    "ast_hash": "637ecca83a7c1c6ed748d1781cc00dd3",
+    "semantic_hash": ""
+  },
+  "server/src/index.js": {
+    "mtime": 1792661911.863623,
+    "seen": 1792661988.73723,
+    "ast_hash": "3e58decfc36822afe9cedef60eacf7e3",
+    "semantic_hash": ""
+  },
+  "server/src/middleware/errorHandler.js": {
+    "mtime": 1792661981.8611758,
+    "seen": 1792661988.7372344,
+    "ast_hash": "a5ca95e2171a1a648724659777266e00",
+    "semantic_hash": ""
+  },
+  "server/src/middleware/notFound.js": {
+    "mtime": 1792658609.070178,
+    "seen": 1792661763.0269248,
+    "ast_hash": "601e056c6ff1eb4e0b4734034e127978",
+    "semantic_hash": ""
+  },
+  "server/src/routes/health.js": {
+    "mtime": 1792658609.075178,
+    "seen": 1792661763.0269275,
+    "ast_hash": "d5da73a08aff1b787c0804add2090fd7",
+    "semantic_hash": ""
+  },
+  "server/tests/health.test.js": {
+    "mtime": 1792658621.3368456,
+    "seen": 1792661763.02693,
+    "ast_hash": "544cf9f142e9f7f715757265dd696356",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1792658581.74518,
+    "seen": 1792661763.026933,
+    "ast_hash": "ecc016417a5e38c417ec932f479ce964",
+    "semantic_hash": ""
+  },
+  "client/index.html": {
+    "mtime": 1792658631.6601765,
+    "seen": 1792661763.0269356,
+    "ast_hash": "589e447df29df1fba973331d11b05a31",
+    "semantic_hash": ""
+  },
+  "server/src/db/migrate.js": {
+    "mtime": 1792661912.0929613,
+    "seen": 1792661988.7369907,
+    "ast_hash": "1400a84bbbebce47a751b7f9273f2e0e",
+    "semantic_hash": ""
+  }
+}

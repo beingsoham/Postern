@@ -1,45 +1,62 @@
-import { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-// Scaffold page. It exists to prove one thing: the client reaches the API
-// through the Vite proxy. The real UI arrives with the design system.
+import { AppShell } from './components/AppShell.jsx';
+import { useAiStatus } from './hooks/useAiStatus.js';
+import { DesignSystem } from './pages/DesignSystem.jsx';
+import { Placeholder } from './pages/Placeholder.jsx';
+
 export default function App() {
-  const [status, setStatus] = useState('checking');
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch('/api/health')
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error('bad response'))))
-      .then((data) => {
-        if (!cancelled) setStatus(data.status);
-      })
-      .catch(() => {
-        if (!cancelled) setStatus('unreachable');
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const reachable = status === 'ok';
+  const aiStatus = useAiStatus();
 
   return (
-    <main className="flex min-h-full items-center justify-center p-6">
-      <div className="w-full max-w-md rounded-xl border border-border bg-surface p-8">
-        <h1 className="text-2xl tracking-tight">Postern</h1>
-        <p className="mt-2 text-sm text-muted">Your private AI inbox.</p>
-
-        <div className="mt-6 flex items-center gap-2 border-t border-border pt-6">
-          <span
-            className={`size-2 rounded-full ${reachable ? 'bg-local-ai' : 'bg-urgent'}`}
-            aria-hidden="true"
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppShell aiStatus={aiStatus} />}>
+          <Route
+            index
+            element={
+              <Placeholder
+                title="Your briefing lands here"
+                description="Once the inbox is analyzed, this page opens with what needs you today."
+              />
+            }
           />
-          <span className="text-sm text-muted">
-            API: <span className="text-text">{status}</span>
-          </span>
-        </div>
-      </div>
-    </main>
+          <Route
+            path="inbox"
+            element={
+              <Placeholder title="Inbox" description="The message list arrives with Prompt 10." />
+            }
+          />
+          <Route
+            path="tasks"
+            element={
+              <Placeholder
+                title="Tasks"
+                description="Extracted actions and deadlines, grouped by due date."
+              />
+            }
+          />
+          <Route
+            path="follow-ups"
+            element={
+              <Placeholder
+                title="Follow-ups"
+                description="Sent mail that nobody has answered yet."
+              />
+            }
+          />
+          <Route
+            path="settings"
+            element={
+              <Placeholder
+                title="Settings"
+                description="Model status, follow-up window, and local data controls."
+              />
+            }
+          />
+          <Route path="design" element={<DesignSystem />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }

@@ -11,5 +11,7 @@ const server = app.listen(config.port, () => {
 for (const signal of ['SIGINT', 'SIGTERM']) {
   process.on(signal, () => {
     server.close(() => process.exit(0));
+    // Open keep-alive connections can stall close(); do not hang forever.
+    setTimeout(() => process.exit(0), 5000).unref();
   });
 }

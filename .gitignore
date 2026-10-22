@@ -26,3 +26,6 @@ npm-debug.log*
 .vscode/
 .idea/
 .DS_Store
+
+# Graphify: keep graph.json, drop the local parse cache
+graphify-out/cache/

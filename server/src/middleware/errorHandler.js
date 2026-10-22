@@ -2,7 +2,7 @@ import { config } from '../config.js';
 
 // The only place that turns an error into a response.
 // Always { error: { code, message } }. Never a stack trace, never a body echo.
-// eslint-disable-next-line no-unused-vars -- Express needs all four parameters
+// Express identifies an error handler by its four parameters.
 export function errorHandler(err, _req, res, _next) {
   const status = Number.isInteger(err?.status) ? err.status : 500;
   const code = err?.code ?? 'internal_error';

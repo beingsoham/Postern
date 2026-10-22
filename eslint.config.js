@@ -6,6 +6,13 @@ export default [
 
   js.configs.recommended,
 
+  {
+    rules: {
+      // A leading underscore marks a deliberately discarded binding.
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    },
+  },
+
   // Server: Node environment, ES modules.
   {
     files: ['server/**/*.js', 'cli/**/*.js', 'eslint.config.js'],
