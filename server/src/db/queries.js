@@ -82,8 +82,13 @@ export function saveAnalysis(db, emailId, { classification, actionItems }) {
        VALUES (?, ?, ?, ?, ?)`,
     );
     for (const item of actionItems ?? []) {
-      insert.run(emailId, item.description, item.due_date ?? null,
-                 item.verification ?? 'unverified', nowIso());
+      insert.run(
+        emailId,
+        item.description,
+        item.due_date ?? null,
+        item.verification ?? 'unverified',
+        nowIso(),
+      );
     }
   });
 

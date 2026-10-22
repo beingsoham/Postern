@@ -33,9 +33,7 @@ export async function generateDraft(db, email, tone = 'friendly') {
   });
 
   const { lastInsertRowid } = db
-    .prepare(
-      `INSERT INTO drafts (email_id, content, tone, created_at) VALUES (?, ?, ?, ?)`,
-    )
+    .prepare(`INSERT INTO drafts (email_id, content, tone, created_at) VALUES (?, ?, ?, ?)`)
     .run(email.id, data.content, tone, new Date().toISOString());
 
   return { id: lastInsertRowid, email_id: email.id, content: data.content, tone, model };

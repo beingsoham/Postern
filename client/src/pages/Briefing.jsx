@@ -2,7 +2,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
-  Button, Card, CardBody, CardHeader, DemoBadge, EmptyState, SkeletonText,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  DemoBadge,
+  EmptyState,
+  SkeletonText,
 } from '../components/index.js';
 import { useAsync } from '../hooks/useAsync.js';
 import { api } from '../services/api.js';
@@ -43,7 +49,7 @@ export function Briefing() {
       const result = await api.analyzeAll({ limit: 40 });
       setProgress(
         `Analyzed ${result.analyzed}` +
-        (result.fallbacks ? `, ${result.fallbacks} fell back to rules` : ''),
+          (result.fallbacks ? `, ${result.fallbacks} fell back to rules` : ''),
       );
       reload();
     } catch (err) {
@@ -93,8 +99,8 @@ export function Briefing() {
           <CardBody>
             <p className="text-base text-accent">Built from rules</p>
             <p className="mt-1 text-base text-muted">
-              The local model was unavailable or its answer failed validation, so
-              this briefing was assembled deterministically from stored facts.
+              The local model was unavailable or its answer failed validation, so this briefing
+              was assembled deterministically from stored facts.
             </p>
           </CardBody>
         </Card>
@@ -103,19 +109,26 @@ export function Briefing() {
       {loading ? (
         <div className="space-y-4">
           {[0, 1, 2].map((i) => (
-            <Card key={i}><CardBody><SkeletonText lines={3} /></CardBody></Card>
+            <Card key={i}>
+              <CardBody>
+                <SkeletonText lines={3} />
+              </CardBody>
+            </Card>
           ))}
         </div>
-      ) : !briefing || (
-        !briefing.needs_attention.length &&
-        !briefing.reply_needed.length &&
-        !briefing.action_items.length
-      ) ? (
+      ) : !briefing ||
+        (!briefing.needs_attention.length &&
+          !briefing.reply_needed.length &&
+          !briefing.action_items.length) ? (
         <Card>
           <EmptyState
             title="Nothing needs you right now"
             description="Analyze the inbox to see what deserves your attention today."
-            action={<Button variant="primary" onClick={analyzeInbox}>Analyze inbox</Button>}
+            action={
+              <Button variant="primary" onClick={analyzeInbox}>
+                Analyze inbox
+              </Button>
+            }
           />
         </Card>
       ) : (

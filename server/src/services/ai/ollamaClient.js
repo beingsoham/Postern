@@ -7,7 +7,13 @@ const TIMEOUT_MS = 30_000;
  * One request to the local model. `format` is a JSON Schema, so Ollama
  * constrains decoding and the response is structurally valid by construction.
  */
-export async function chat({ system, user, format, model = config.ollamaModel, temperature = 0.1 }) {
+export async function chat({
+  system,
+  user,
+  format,
+  model = config.ollamaModel,
+  temperature = 0.1,
+}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
@@ -79,7 +85,8 @@ export async function chatJson({ system, user, format, schema, model, retries = 
 
       return { data: result.data, model: used };
     } catch (err) {
-      lastError = err instanceof AiError ? err : new AiError('invalid', String(err?.message ?? err));
+      lastError =
+        err instanceof AiError ? err : new AiError('invalid', String(err?.message ?? err));
       // A model that is down will still be down on a retry.
       if (lastError.kind === 'unreachable') break;
     }

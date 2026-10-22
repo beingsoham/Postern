@@ -23,9 +23,7 @@ for (const email of rows) {
   const want = expected.get(email.provider_id);
   if (!want?.category) continue;
 
-  const got = rulesOnly
-    ? analyzeWithRules(email)
-    : (await analyzeEmail(email)).classification;
+  const got = rulesOnly ? analyzeWithRules(email) : (await analyzeEmail(email)).classification;
 
   scored += 1;
   if (got.category === want.category) catHits += 1;

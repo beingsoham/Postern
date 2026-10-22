@@ -17,7 +17,9 @@ briefingRouter.get('/briefing/today', async (_req, res) => {
 });
 
 const idParam = z.object({ id: z.coerce.number().int().positive() });
-const draftBody = z.object({ tone: z.enum(['friendly', 'formal', 'brief']).default('friendly') });
+const draftBody = z.object({
+  tone: z.enum(['friendly', 'formal', 'brief']).default('friendly'),
+});
 
 briefingRouter.post(
   '/emails/:id/drafts',

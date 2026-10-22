@@ -12,7 +12,10 @@ describe('doctor report formatting', () => {
 
   it('prints an actionable fix for a failure', () => {
     const line = formatLine({
-      level: 'fail', label: 'Database', detail: 'missing', fix: 'Run: npm run db:migrate',
+      level: 'fail',
+      label: 'Database',
+      detail: 'missing',
+      fix: 'Run: npm run db:migrate',
     });
     expect(line).toContain('[FAIL]');
     expect(line).toContain('fix: Run: npm run db:migrate');

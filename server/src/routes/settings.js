@@ -48,5 +48,8 @@ settingsRouter.delete('/data', validate(deleteBody, 'body'), (req, res) => {
     return before;
   })();
 
-  res.json({ deleted_emails: counts, remaining: db.prepare('SELECT COUNT(*) AS n FROM emails').get().n });
+  res.json({
+    deleted_emails: counts,
+    remaining: db.prepare('SELECT COUNT(*) AS n FROM emails').get().n,
+  });
 });

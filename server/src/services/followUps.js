@@ -30,7 +30,9 @@ export function detectFollowUps(db, { days = 3, now = new Date() } = {}) {
 
   const tx = db.transaction(() => {
     for (const c of candidates) {
-      const waited = Math.floor((now.getTime() - new Date(c.received_at).getTime()) / 86_400_000);
+      const waited = Math.floor(
+        (now.getTime() - new Date(c.received_at).getTime()) / 86_400_000,
+      );
       insert.run({
         thread_id: c.thread_id,
         email_id: c.id,

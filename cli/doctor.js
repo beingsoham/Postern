@@ -23,7 +23,8 @@ export function summarise(results) {
   const failed = results.filter((r) => r.level === 'fail').length;
   const warned = results.filter((r) => r.level === 'warn').length;
 
-  if (failed) return { line: `${failed} check(s) failed. Postern will not run correctly.`, code: 1 };
+  if (failed)
+    return { line: `${failed} check(s) failed. Postern will not run correctly.`, code: 1 };
   if (warned) return { line: 'Ready to run in demo mode, with warnings.', code: 0 };
   return { line: 'Ready to run in demo mode.', code: 0 };
 }
@@ -33,15 +34,22 @@ async function runChecks() {
   const add = (level, label, detail, fix) => results.push({ level, label, detail, fix });
 
   // Node
-  const major = Number(process.versions.node.split('.')[0]);
-  major >= 20
+  // 22 rather than 20: the database scripts use --env-file-if-exists,
+  // which Node added in 22.9.
+  const [major, minor] = process.versions.node.split('.').map(Number);
+  major > 22 || (major === 22 && minor >= 9)
     ? add('pass', 'Node version', `v${process.versions.node}`)
-    : add('fail', 'Node version', `v${process.versions.node}`, 'Install Node 20 or newer.');
+    : add('fail', 'Node version', `v${process.versions.node}`, 'Install Node 22.9 or newer.');
 
   // Database
   let db = null;
   if (!existsSync(config.dbPath)) {
-    add('warn', 'Database file', 'not created yet', 'Run: npm run db:migrate && npm run db:seed');
+    add(
+      'warn',
+      'Database file',
+      'not created yet',
+      'Run: npm run db:migrate && npm run db:seed',
+    );
   } else {
     try {
       db = openDb();
@@ -57,8 +65,13 @@ async function runChecks() {
   // Rule engine works without any model at all.
   try {
     const r = analyzeWithRules(
-      { subject: 'Report due today', body: 'Submit by EOD.', sender: 'a@b.com',
-        received_at: new Date().toISOString(), direction: 'in' },
+      {
+        subject: 'Report due today',
+        body: 'Submit by EOD.',
+        sender: 'a@b.com',
+        received_at: new Date().toISOString(),
+        direction: 'in',
+      },
       new Date(),
     );
     r.priority
@@ -71,11 +84,19 @@ async function runChecks() {
   // Ollama
   const ai = await checkOllama();
   if (!ai.reachable) {
-    add('warn', 'Ollama', `not reachable at ${config.ollamaUrl}`,
-        'Start it with: ollama serve');
+    add(
+      'warn',
+      'Ollama',
+      `not reachable at ${config.ollamaUrl}`,
+      'Start it with: ollama serve',
+    );
   } else if (!ai.model_available) {
-    add('warn', 'Model', `${config.ollamaModel} not installed`,
-        `Pull it with: ollama pull ${config.ollamaModel}`);
+    add(
+      'warn',
+      'Model',
+      `${config.ollamaModel} not installed`,
+      `Pull it with: ollama pull ${config.ollamaModel}`,
+    );
   } else {
     add('pass', 'Ollama', `${config.ollamaModel} available`);
 
@@ -83,24 +104,40 @@ async function runChecks() {
     const started = Date.now();
     try {
       const result = await analyzeEmail({
-        id: 0, subject: 'Lab report due Friday',
+        id: 0,
+        subject: 'Lab report due Friday',
         body: 'The signals lab report is due this Friday before 5 PM.',
-        sender: 'prof@university.edu', received_at: new Date().toISOString(),
-        direction: 'in', list_unsubscribe: 0,
+        sender: 'prof@university.edu',
+        received_at: new Date().toISOString(),
+        direction: 'in',
+        list_unsubscribe: 0,
       });
       const seconds = ((Date.now() - started) / 1000).toFixed(1);
 
       result.classification.status === 'ok'
-        ? add('pass', 'Sample classification', `${result.classification.priority} in ${seconds}s`)
-        : add('warn', 'Sample classification', `fell back to rules after ${seconds}s`,
-              'The model was slow or returned invalid output. Rules still work.');
+        ? add(
+            'pass',
+            'Sample classification',
+            `${result.classification.priority} in ${seconds}s`,
+          )
+        : add(
+            'warn',
+            'Sample classification',
+            `fell back to rules after ${seconds}s`,
+            'The model was slow or returned invalid output. Rules still work.',
+          );
     } catch (err) {
       add('warn', 'Sample classification', err.message, 'Rules will be used instead.');
     }
   }
 
   // Gmail is not wired up yet, and the spec says to say so rather than imply it.
-  add('warn', 'Gmail connection', 'not connected', 'Sample data is in use. Gmail OAuth is on the roadmap.');
+  add(
+    'warn',
+    'Gmail connection',
+    'not connected',
+    'Sample data is in use. Gmail OAuth is on the roadmap.',
+  );
 
   db?.close();
   return results;

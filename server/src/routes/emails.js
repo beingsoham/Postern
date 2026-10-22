@@ -10,8 +10,14 @@ export const emailsRouter = Router();
 
 const PRIORITIES = ['urgent', 'important', 'normal', 'low'];
 const CATEGORIES = [
-  'academic', 'work', 'recruiting', 'finance',
-  'security', 'newsletter', 'social', 'other',
+  'academic',
+  'work',
+  'recruiting',
+  'finance',
+  'security',
+  'newsletter',
+  'social',
+  'other',
 ];
 
 const listQuery = z.object({
@@ -34,9 +40,18 @@ emailsRouter.get('/emails', validate(listQuery), (req, res) => {
   const where = [];
   const params = {};
 
-  if (priority) { where.push('c.priority = @priority'); params.priority = priority; }
-  if (category) { where.push('c.category = @category'); params.category = category; }
-  if (direction) { where.push('e.direction = @direction'); params.direction = direction; }
+  if (priority) {
+    where.push('c.priority = @priority');
+    params.priority = priority;
+  }
+  if (category) {
+    where.push('c.category = @category');
+    params.category = category;
+  }
+  if (direction) {
+    where.push('e.direction = @direction');
+    params.direction = direction;
+  }
   if (unanalyzed) where.push('c.email_id IS NULL');
   if (search) {
     where.push('(e.subject LIKE @search OR e.sender LIKE @search OR e.body LIKE @search)');
@@ -46,8 +61,10 @@ emailsRouter.get('/emails', validate(listQuery), (req, res) => {
   const clause = where.length ? `WHERE ${where.join(' AND ')}` : '';
 
   const { total } = db
-    .prepare(`SELECT COUNT(*) AS total FROM emails e
-              LEFT JOIN classifications c ON c.email_id = e.id ${clause}`)
+    .prepare(
+      `SELECT COUNT(*) AS total FROM emails e
+              LEFT JOIN classifications c ON c.email_id = e.id ${clause}`,
+    )
     .get(params);
 
   const rows = db

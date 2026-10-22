@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A second push to the same branch cancels the run still in flight.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Lint, test and build
+    runs-on: ubuntu-latest
+
+    # No Ollama and no model download. Every test runs offline: the rule
+    # engine, the report formatter and the API are all exercised without one.
+    env:
+      OLLAMA_URL: http://127.0.0.1:1
+      NODE_ENV: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Test
+        run: npm test
+
+      - name: Build client
+        run: npm run build
+
+      - name: Database migrates and seeds from scratch
+        run: |
+          npm run db:migrate
+          npm run db:seed
+          npm run db:seed
+
+      - name: Rule engine works with no model available
+        run: npm run eval -- --rules-only

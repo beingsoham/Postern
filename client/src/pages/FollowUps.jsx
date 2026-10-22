@@ -72,23 +72,33 @@ export function FollowUps() {
         <div>
           <h1 className="font-display text-xl">Follow-ups</h1>
           <p className="mt-1 text-base text-muted">
-            Mail you sent that nobody has answered. Detected from your threads,
-            with no model involved.
+            Mail you sent that nobody has answered. Detected from your threads, with no model
+            involved.
           </p>
         </div>
-        <Button size="sm" onClick={detect}>Check again</Button>
+        <Button size="sm" onClick={detect}>
+          Check again
+        </Button>
       </div>
 
       {error && <p className="mb-4 text-base text-urgent">{error.message}</p>}
 
       {loading ? (
-        <Card><CardBody><SkeletonText lines={4} /></CardBody></Card>
+        <Card>
+          <CardBody>
+            <SkeletonText lines={4} />
+          </CardBody>
+        </Card>
       ) : !items.length ? (
         <Card>
           <EmptyState
             title="Nobody is keeping you waiting"
             description="Every message you sent has had a reply."
-            action={<Button variant="primary" onClick={detect}>Check again</Button>}
+            action={
+              <Button variant="primary" onClick={detect}>
+                Check again
+              </Button>
+            }
           />
         </Card>
       ) : (

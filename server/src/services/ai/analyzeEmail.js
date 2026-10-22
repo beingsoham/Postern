@@ -77,11 +77,13 @@ export async function analyzeEmail(email, { now = new Date() } = {}) {
 
   // Rule-derived tasks: only ever from an unambiguous date we parsed ourselves.
   const ruleTasks = rules.due_date
-    ? [{
-        description: `Act on: ${email.subject}`.slice(0, 300),
-        due_date: rules.due_date.slice(0, 10),
-        verification: 'verified',
-      }]
+    ? [
+        {
+          description: `Act on: ${email.subject}`.slice(0, 300),
+          due_date: rules.due_date.slice(0, 10),
+          verification: 'verified',
+        },
+      ]
     : [];
 
   let result;
@@ -117,8 +119,13 @@ export async function analyzeEmail(email, { now = new Date() } = {}) {
   // urgent: the instruction can move the model, but not the rules.
   const rulesIndex = ORDER.indexOf(rules.priority);
   const aiIndex = ORDER.indexOf(ai.priority);
-  const clamped = ORDER[Math.max(0, Math.min(ORDER.length - 1,
-    Math.max(rulesIndex - 1, Math.min(rulesIndex + 1, aiIndex))))];
+  const clamped =
+    ORDER[
+      Math.max(
+        0,
+        Math.min(ORDER.length - 1, Math.max(rulesIndex - 1, Math.min(rulesIndex + 1, aiIndex))),
+      )
+    ];
 
   let priority = bulkCapped ? rules.priority : clamped;
   let reason = ai.reason || rules.reason;
@@ -131,7 +138,10 @@ export async function analyzeEmail(email, { now = new Date() } = {}) {
     reason = 'Bulk mail: kept low whatever the wording suggests.';
   }
 
-  const ourDates = extractDates(`${email.subject ?? ''} ${email.body ?? ''}`, email.received_at);
+  const ourDates = extractDates(
+    `${email.subject ?? ''} ${email.body ?? ''}`,
+    email.received_at,
+  );
 
   const actionItems = ai.action_items.map((item) => ({
     description: tidyDescription(item.description),
@@ -141,9 +151,8 @@ export async function analyzeEmail(email, { now = new Date() } = {}) {
   // Category comes from the rules. Measured over the sample inbox, the small
   // model answered 'newsletter' for 35 of 36 emails, so its category is only
   // consulted where the rules found no signal at all.
-  const category = rules.category === 'other' && ai.category !== 'newsletter'
-    ? ai.category
-    : rules.category;
+  const category =
+    rules.category === 'other' && ai.category !== 'newsletter' ? ai.category : rules.category;
 
   return {
     classification: {

@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Button, Card, CardBody, CardHeader, EmptyState, SkeletonText } from '../components/index.js';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  EmptyState,
+  SkeletonText,
+} from '../components/index.js';
 import { useAsync } from '../hooks/useAsync.js';
 import { api } from '../services/api.js';
 
@@ -61,8 +68,12 @@ function TaskItem({ task, onChange }) {
                   className="rounded-control border border-border bg-bg px-2 py-1 font-mono text-xs"
                   aria-label="Due date"
                 />
-                <Button size="sm" variant="primary" onClick={save}>Save</Button>
-                <Button size="sm" variant="ghost" onClick={() => setEditing(false)}>Cancel</Button>
+                <Button size="sm" variant="primary" onClick={save}>
+                  Save
+                </Button>
+                <Button size="sm" variant="ghost" onClick={() => setEditing(false)}>
+                  Cancel
+                </Button>
               </div>
             </div>
           ) : (
@@ -86,7 +97,9 @@ function TaskItem({ task, onChange }) {
 
         {!editing && (
           <div className="flex shrink-0 gap-1">
-            <Button size="sm" variant="ghost" onClick={() => setEditing(true)}>Edit</Button>
+            <Button size="sm" variant="ghost" onClick={() => setEditing(true)}>
+              Edit
+            </Button>
             <Button
               size="sm"
               variant="ghost"
@@ -110,13 +123,12 @@ export function Tasks() {
     reload();
   }
 
-  const tasks = (data?.tasks ?? []).filter(
-    (t) => showDismissed || t.status !== 'dismissed',
-  );
+  const tasks = (data?.tasks ?? []).filter((t) => showDismissed || t.status !== 'dismissed');
 
-  const groups = ORDER
-    .map((name) => [name, tasks.filter((t) => bucketOf(t.due_date) === name)])
-    .filter(([, items]) => items.length);
+  const groups = ORDER.map((name) => [
+    name,
+    tasks.filter((t) => bucketOf(t.due_date) === name),
+  ]).filter(([, items]) => items.length);
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-10">
@@ -124,8 +136,8 @@ export function Tasks() {
         <div>
           <h1 className="font-display text-xl">Tasks</h1>
           <p className="mt-1 text-base text-muted">
-            Extracted from your mail. A date marked unverified was not confirmed
-            against the email text.
+            Extracted from your mail. A date marked unverified was not confirmed against the
+            email text.
           </p>
         </div>
         <Button size="sm" variant="ghost" onClick={() => setShowDismissed((v) => !v)}>
@@ -136,7 +148,11 @@ export function Tasks() {
       {error && <p className="mb-4 text-base text-urgent">{error.message}</p>}
 
       {loading ? (
-        <Card><CardBody><SkeletonText lines={6} /></CardBody></Card>
+        <Card>
+          <CardBody>
+            <SkeletonText lines={6} />
+          </CardBody>
+        </Card>
       ) : !groups.length ? (
         <Card>
           <EmptyState

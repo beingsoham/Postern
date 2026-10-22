@@ -49,14 +49,19 @@ export function DraftPanel({ email, onClose }) {
               key={t}
               size="sm"
               variant={t === tone ? 'primary' : 'ghost'}
-              onClick={() => { setTone(t); generate(t); }}
+              onClick={() => {
+                setTone(t);
+                generate(t);
+              }}
               disabled={loading}
             >
               {t}
             </Button>
           ))}
         </div>
-        <Button size="sm" variant="ghost" onClick={onClose}>Close</Button>
+        <Button size="sm" variant="ghost" onClick={onClose}>
+          Close
+        </Button>
       </div>
 
       {loading && <SkeletonText lines={4} />}
@@ -83,7 +88,9 @@ export function DraftPanel({ email, onClose }) {
             <Button size="sm" onClick={() => generate()} disabled={loading}>
               Regenerate
             </Button>
-            <Button size="sm" onClick={copy}>{copied ? 'Copied' : 'Copy'}</Button>
+            <Button size="sm" onClick={copy}>
+              {copied ? 'Copied' : 'Copy'}
+            </Button>
             <Button size="sm" variant="ghost" onClick={() => setContent('')}>
               Discard
             </Button>

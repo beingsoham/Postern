@@ -6,7 +6,7 @@
   "description": "Your private AI inbox — local-first email intelligence",
   "license": "MIT",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "workspaces": [
     "client",
@@ -22,13 +22,16 @@
     "db:migrate": "npm run db:migrate --workspace=server",
     "db:seed": "npm run db:seed --workspace=server",
     "doctor": "node --env-file-if-exists=.env cli/doctor.js",
-    "eval": "npm run eval --workspace=server"
+    "eval": "npm run eval --workspace=server",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "concurrently": "^9.1.2",
     "eslint": "^10.13.0",
-    "globals": "^17.13.0"
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10"
   },
   "bin": {
     "postern": "cli/doctor.js"

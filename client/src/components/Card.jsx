@@ -3,10 +3,7 @@ import { cn } from './cn.js';
 // 1px border, 12px radius, no shadow. The border does the separating work.
 export function Card({ as: Tag = 'div', className, children, ...props }) {
   return (
-    <Tag
-      className={cn('rounded-card border border-border bg-surface', className)}
-      {...props}
-    >
+    <Tag className={cn('rounded-card border border-border bg-surface', className)} {...props}>
       {children}
     </Tag>
   );

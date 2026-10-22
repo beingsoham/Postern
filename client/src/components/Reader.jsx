@@ -14,7 +14,14 @@ import { absoluteTime } from '../lib/time.js';
 const PRIORITIES = ['urgent', 'important', 'normal', 'low'];
 
 export function Reader({
-  detail, loading, analyzing, onAnalyze, onOverride, onToggleTask, draftOpen, setDraftOpen,
+  detail,
+  loading,
+  analyzing,
+  onAnalyze,
+  onOverride,
+  onToggleTask,
+  draftOpen,
+  setDraftOpen,
 }) {
   const [correcting, setCorrecting] = useState(false);
 
@@ -48,8 +55,10 @@ export function Reader({
           {Boolean(email.is_demo) && <DemoBadge className="mt-1 shrink-0" />}
         </div>
         <p className="mt-2 font-mono text-xs text-muted">
-          {email.sender_name ? `${email.sender_name} · ` : ''}{email.sender}
-          {' · '}{absoluteTime(email.received_at)}
+          {email.sender_name ? `${email.sender_name} · ` : ''}
+          {email.sender}
+          {' · '}
+          {absoluteTime(email.received_at)}
         </p>
       </header>
 
@@ -82,7 +91,10 @@ export function Reader({
                     key={p}
                     size="sm"
                     variant={p === email.priority ? 'primary' : 'secondary'}
-                    onClick={() => { onOverride(p); setCorrecting(false); }}
+                    onClick={() => {
+                      onOverride(p);
+                      setCorrecting(false);
+                    }}
                   >
                     {p}
                   </Button>

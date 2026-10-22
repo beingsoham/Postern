@@ -1,7 +1,16 @@
 import {
-  ACADEMIC_WORDS, DEADLINE_WORDS, FAILURE_WORDS, FINANCE_WORDS, NEWSLETTER_WORDS,
-  NO_REPLY_PATTERNS, RECRUITER_WORDS, SECURITY_WORDS, SOCIAL_WORDS,
-  WORK_WORDS, anyMatch, countHits,
+  ACADEMIC_WORDS,
+  DEADLINE_WORDS,
+  FAILURE_WORDS,
+  FINANCE_WORDS,
+  NEWSLETTER_WORDS,
+  NO_REPLY_PATTERNS,
+  RECRUITER_WORDS,
+  SECURITY_WORDS,
+  SOCIAL_WORDS,
+  WORK_WORDS,
+  anyMatch,
+  countHits,
 } from './signals.js';
 import { earliestDate, extractDates, hoursUntil } from './dates.js';
 
@@ -82,15 +91,25 @@ export function analyzeWithRules(email, now = new Date()) {
   }
 
   if (hours !== null && !bulk) {
-    if (hours <= 24) { score += 30; signals.push('date within a day'); }
-    else if (hours <= 72) { score += 18; signals.push('date within three days'); }
-    else if (hours <= 168) { score += 8; signals.push('date this week'); }
+    if (hours <= 24) {
+      score += 30;
+      signals.push('date within a day');
+    } else if (hours <= 72) {
+      score += 18;
+      signals.push('date within three days');
+    } else if (hours <= 168) {
+      score += 8;
+      signals.push('date this week');
+    }
   }
 
   // A direct question usually wants an answer from a human.
   const asksQuestion = /\?/.test(email.subject ?? '') || /\?/.test(email.body ?? '');
   const fromPerson = !isAutomatedSender(email) && !bulk;
-  if (asksQuestion && fromPerson) { score += 18; signals.push('direct question'); }
+  if (asksQuestion && fromPerson) {
+    score += 18;
+    signals.push('direct question');
+  }
 
   const failureHits = countHits(haystack, FAILURE_WORDS);
   if (failureHits && !bulk) {
@@ -98,10 +117,19 @@ export function analyzeWithRules(email, now = new Date()) {
     signals.push('something has failed or is blocked');
   }
 
-  if (category === 'security' && !bulk) { score += 25; signals.push('security topic'); }
-  if (category === 'recruiting' && fromPerson) { score += 12; signals.push('recruiter contact'); }
+  if (category === 'security' && !bulk) {
+    score += 25;
+    signals.push('security topic');
+  }
+  if (category === 'recruiting' && fromPerson) {
+    score += 12;
+    signals.push('recruiter contact');
+  }
 
-  if (email.known_sender) { score += 15; signals.push('known sender'); }
+  if (email.known_sender) {
+    score += 15;
+    signals.push('known sender');
+  }
 
   // Deadline wording and a same-day date are much stronger together than
   // either alone: that combination is what 'urgent' actually means.
@@ -144,9 +172,12 @@ function buildReason({ bulk, signals, hours, priority }) {
   if (!signals.length) return 'No deadline, question or known sender was detected.';
 
   const when =
-    hours === null ? null
-      : hours <= 24 ? 'a date within a day'
-        : hours <= 72 ? 'a date within three days'
+    hours === null
+      ? null
+      : hours <= 24
+        ? 'a date within a day'
+        : hours <= 72
+          ? 'a date within three days'
           : null;
 
   const parts = signals.filter((s) => !s.startsWith('date ')).slice(0, 2);

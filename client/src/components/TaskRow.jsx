@@ -15,9 +15,7 @@ export function TaskRow({ task, onToggle }) {
         aria-label={`Mark "${task.description}" ${done ? 'not done' : 'done'}`}
       />
       <div className="min-w-0 flex-1">
-        <p className={cn('text-base', done && 'text-muted line-through')}>
-          {task.description}
-        </p>
+        <p className={cn('text-base', done && 'text-muted line-through')}>{task.description}</p>
         <p className="font-mono text-xs text-muted">
           {task.due_date ? `due ${task.due_date}` : 'no date'}
           {task.verification === 'unverified' && ' · unverified'}

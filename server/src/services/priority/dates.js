@@ -18,25 +18,28 @@ export function extractDates(text, reference) {
   const dates = results
     .filter((r) => !NOT_A_DEADLINE.test(r.text.trim()))
     .map((r) => {
-    const bothSmall = AMBIGUOUS_NUMERIC.exec(r.text);
-    const ambiguous = Boolean(
-      bothSmall && Number(bothSmall[1]) <= 12 && Number(bothSmall[2]) <= 12,
-    );
+      const bothSmall = AMBIGUOUS_NUMERIC.exec(r.text);
+      const ambiguous = Boolean(
+        bothSmall && Number(bothSmall[1]) <= 12 && Number(bothSmall[2]) <= 12,
+      );
 
-    return {
-      text: r.text,
-      iso: ambiguous ? null : r.start.date().toISOString(),
-      ambiguous,
-      has_time: r.start.isCertain('hour'),
-    };
-  });
+      return {
+        text: r.text,
+        iso: ambiguous ? null : r.start.date().toISOString(),
+        ambiguous,
+        has_time: r.start.isCertain('hour'),
+      };
+    });
 
   return dates;
 }
 
 // The soonest unambiguous date, or null.
 export function earliestDate(dates) {
-  const usable = dates.filter((d) => d.iso && !d.ambiguous).map((d) => d.iso).sort();
+  const usable = dates
+    .filter((d) => d.iso && !d.ambiguous)
+    .map((d) => d.iso)
+    .sort();
   return usable[0] ?? null;
 }
 

@@ -43,8 +43,10 @@ export function gatherFacts(db, { withinDays = 3 } = {}) {
 export function deterministicBriefing(facts) {
   const n = facts.needs_attention.length;
   const headline =
-    n === 0 ? 'Nothing needs you right now'
-      : n === 1 ? 'One thing needs you today'
+    n === 0
+      ? 'Nothing needs you right now'
+      : n === 1
+        ? 'One thing needs you today'
         : `${n} things need you today`;
 
   const next = facts.needs_attention[0] ?? facts.reply_needed[0];
@@ -89,7 +91,11 @@ export async function buildBriefing(db, options) {
   const facts = gatherFacts(db, options);
   const fallback = deterministicBriefing(facts);
 
-  if (!facts.needs_attention.length && !facts.reply_needed.length && !facts.action_items.length) {
+  if (
+    !facts.needs_attention.length &&
+    !facts.reply_needed.length &&
+    !facts.action_items.length
+  ) {
     return fallback;
   }
 
@@ -104,9 +110,10 @@ export async function buildBriefing(db, options) {
     const checked = dropUnknownReferences(data, facts);
 
     // If validation emptied it, the deterministic version is more useful.
-    const empty = !checked.needs_attention.length
-      && !checked.reply_needed.length
-      && !checked.action_items.length;
+    const empty =
+      !checked.needs_attention.length &&
+      !checked.reply_needed.length &&
+      !checked.action_items.length;
 
     return empty ? fallback : { ...checked, source: 'model' };
   } catch {

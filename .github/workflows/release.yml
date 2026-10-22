@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish
+    runs-on: ubuntu-latest
+
+    env:
+      OLLAMA_URL: http://127.0.0.1:1
+      NODE_ENV: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # The same gates as CI: a tag never ships something that would fail a PR.
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: Build client
+        run: npm run build
+
+      - name: Package
+        run: |
+          mkdir -p dist
+          zip -r "dist/postern-client-${{ github.ref_name }}.zip" client/dist
+          zip -r "dist/postern-server-${{ github.ref_name }}.zip" \
+            server/src server/package.json cli package.json README.md
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true

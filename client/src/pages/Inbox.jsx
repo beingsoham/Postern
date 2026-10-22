@@ -6,8 +6,14 @@ import { api } from '../services/api.js';
 
 const PRIORITIES = ['urgent', 'important', 'normal', 'low'];
 const CATEGORIES = [
-  'academic', 'work', 'recruiting', 'finance',
-  'security', 'newsletter', 'social', 'other',
+  'academic',
+  'work',
+  'recruiting',
+  'finance',
+  'security',
+  'newsletter',
+  'social',
+  'other',
 ];
 
 const LIMIT = 25;
@@ -31,7 +37,10 @@ export function Inbox() {
 
   // Typing should not fire a request per keystroke.
   useEffect(() => {
-    const t = setTimeout(() => { setDebounced(search); setPage(1); }, 250);
+    const t = setTimeout(() => {
+      setDebounced(search);
+      setPage(1);
+    }, 250);
     return () => clearTimeout(t);
   }, [search]);
 
@@ -39,7 +48,11 @@ export function Inbox() {
     setList((s) => ({ ...s, loading: true }));
     try {
       const data = await api.emails({
-        search: debounced, priority, category, page, limit: LIMIT,
+        search: debounced,
+        priority,
+        category,
+        page,
+        limit: LIMIT,
       });
       setList({ ...data, loading: false });
       setError(null);
@@ -49,7 +62,9 @@ export function Inbox() {
     }
   }, [debounced, priority, category, page]);
 
-  useEffect(() => { loadList(); }, [loadList]);
+  useEffect(() => {
+    loadList();
+  }, [loadList]);
 
   // A briefing link arrives as /inbox?focus=<id>.
   useEffect(() => {
@@ -62,7 +77,10 @@ export function Inbox() {
   }, [params, setParams]);
 
   const loadDetail = useCallback(async (id) => {
-    if (!id) { setDetail(null); return; }
+    if (!id) {
+      setDetail(null);
+      return;
+    }
     setDetailLoading(true);
     setDraftOpen(false);
     try {
@@ -75,7 +93,9 @@ export function Inbox() {
     }
   }, []);
 
-  useEffect(() => { loadDetail(selectedId); }, [selectedId, loadDetail]);
+  useEffect(() => {
+    loadDetail(selectedId);
+  }, [selectedId, loadDetail]);
 
   const ids = useMemo(() => list.emails.map((e) => e.id), [list.emails]);
 
@@ -149,23 +169,37 @@ export function Inbox() {
           <div className="flex gap-2">
             <select
               value={priority}
-              onChange={(e) => { setPriority(e.target.value); setPage(1); }}
+              onChange={(e) => {
+                setPriority(e.target.value);
+                setPage(1);
+              }}
               className="flex-1 rounded-control border border-border bg-surface px-2 py-1.5
                          font-mono text-xs text-text"
               aria-label="Filter by priority"
             >
               <option value="">all priorities</option>
-              {PRIORITIES.map((p) => <option key={p} value={p}>{p}</option>)}
+              {PRIORITIES.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
             </select>
             <select
               value={category}
-              onChange={(e) => { setCategory(e.target.value); setPage(1); }}
+              onChange={(e) => {
+                setCategory(e.target.value);
+                setPage(1);
+              }}
               className="flex-1 rounded-control border border-border bg-surface px-2 py-1.5
                          font-mono text-xs text-text"
               aria-label="Filter by category"
             >
               <option value="">all categories</option>
-              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
             </select>
           </div>
           <p className="font-mono text-xs text-muted">
@@ -185,10 +219,16 @@ export function Inbox() {
 
         {list.pages > 1 && (
           <div className="flex items-center justify-between gap-2 border-t border-border p-2">
-            <Button size="sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1}>
+            <Button
+              size="sm"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page <= 1}
+            >
               Previous
             </Button>
-            <span className="font-mono text-xs text-muted">{page} / {list.pages}</span>
+            <span className="font-mono text-xs text-muted">
+              {page} / {list.pages}
+            </span>
             <Button
               size="sm"
               onClick={() => setPage((p) => Math.min(list.pages, p + 1))}

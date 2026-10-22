@@ -36,8 +36,8 @@ function DeleteDialog({ onCancel, onConfirm, busy }) {
         <CardHeader title="Delete all local data" />
         <CardBody className="space-y-3">
           <p className="text-base">
-            This removes every email, classification, task, draft and follow-up
-            from the database on this machine. It cannot be undone.
+            This removes every email, classification, task, draft and follow-up from the
+            database on this machine. It cannot be undone.
           </p>
           <p className="text-base text-muted">
             Type <span className="font-mono text-text">{phrase}</span> to confirm.
@@ -50,7 +50,9 @@ function DeleteDialog({ onCancel, onConfirm, busy }) {
             aria-label="Confirmation phrase"
           />
           <div className="flex justify-end gap-2 pt-1">
-            <Button variant="ghost" onClick={onCancel}>Cancel</Button>
+            <Button variant="ghost" onClick={onCancel}>
+              Cancel
+            </Button>
             <Button variant="danger" onClick={onConfirm} disabled={typed !== phrase || busy}>
               {busy ? 'Deleting…' : 'Delete everything'}
             </Button>
@@ -119,8 +121,8 @@ export function Settings() {
                 <StatusRow label="Endpoint" value={ai.data?.url ?? '—'} />
                 {!ai.data?.reachable && (
                   <p className="mt-3 text-base text-muted">
-                    Postern still works without the model: every email is classified
-                    by rules instead, and the briefing is assembled from stored facts.
+                    Postern still works without the model: every email is classified by rules
+                    instead, and the briefing is assembled from stored facts.
                   </p>
                 )}
               </>
@@ -157,10 +159,10 @@ export function Settings() {
           <CardHeader title="Privacy" />
           <CardBody className="space-y-3">
             <p className="text-base text-muted">
-              Analysis runs on this machine through Ollama. Email bodies and tokens
-              are never written to logs, and the database is a file on your own disk.
-              Local inference is not the same as fully offline: syncing real mail
-              would still involve network traffic.
+              Analysis runs on this machine through Ollama. Email bodies and tokens are never
+              written to logs, and the database is a file on your own disk. Local inference is
+              not the same as fully offline: syncing real mail would still involve network
+              traffic.
             </p>
             <div className="flex items-center gap-3 border-t border-border pt-3">
               <Button variant="danger" onClick={() => setConfirming(true)}>

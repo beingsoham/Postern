@@ -1,8 +1,14 @@
 import { z } from 'zod';
 
 export const CATEGORIES = [
-  'academic', 'work', 'recruiting', 'finance',
-  'security', 'newsletter', 'social', 'other',
+  'academic',
+  'work',
+  'recruiting',
+  'finance',
+  'security',
+  'newsletter',
+  'social',
+  'other',
 ];
 
 export const PRIORITIES = ['urgent', 'important', 'normal', 'low'];
@@ -57,9 +63,18 @@ export const classificationFormat = {
 
 export const BriefingSchema = z.object({
   headline: z.string().trim().max(120),
-  needs_attention: z.array(z.object({ email_id: z.number().int(), note: z.string().max(160) })).max(5).default([]),
-  reply_needed: z.array(z.object({ email_id: z.number().int(), note: z.string().max(160) })).max(5).default([]),
-  action_items: z.array(z.object({ task_id: z.number().int(), note: z.string().max(160) })).max(5).default([]),
+  needs_attention: z
+    .array(z.object({ email_id: z.number().int(), note: z.string().max(160) }))
+    .max(5)
+    .default([]),
+  reply_needed: z
+    .array(z.object({ email_id: z.number().int(), note: z.string().max(160) }))
+    .max(5)
+    .default([]),
+  action_items: z
+    .array(z.object({ task_id: z.number().int(), note: z.string().max(160) }))
+    .max(5)
+    .default([]),
   next_step: z.string().trim().max(200),
 });
 

@@ -30,7 +30,10 @@ tasksRouter.get('/tasks', validate(listQuery), (req, res) => {
   const where = ['1 = 1'];
   const params = {};
 
-  if (status) { where.push('t.status = @status'); params.status = status; }
+  if (status) {
+    where.push('t.status = @status');
+    params.status = status;
+  }
   if (within !== undefined) {
     where.push('t.due_date IS NOT NULL AND date(t.due_date) <= date(@cutoff)');
     params.cutoff = new Date(Date.now() + within * 86_400_000).toISOString().slice(0, 10);

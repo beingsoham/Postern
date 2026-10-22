@@ -12,8 +12,26 @@ export function EmailBody({ body }) {
     if (!body || !looksLikeHtml(body)) return null;
 
     return DOMPurify.sanitize(body, {
-      ALLOWED_TAGS: ['p', 'br', 'b', 'strong', 'i', 'em', 'u', 'ul', 'ol', 'li',
-                     'blockquote', 'a', 'h1', 'h2', 'h3', 'code', 'pre', 'span'],
+      ALLOWED_TAGS: [
+        'p',
+        'br',
+        'b',
+        'strong',
+        'i',
+        'em',
+        'u',
+        'ul',
+        'ol',
+        'li',
+        'blockquote',
+        'a',
+        'h1',
+        'h2',
+        'h3',
+        'code',
+        'pre',
+        'span',
+      ],
       ALLOWED_ATTR: ['href', 'title'],
       // No remote images: loading one tells the sender you opened the mail.
       FORBID_TAGS: ['img', 'style', 'script', 'iframe', 'form', 'object', 'embed'],
