@@ -115,9 +115,16 @@ export async function analyzeEmail(email, { now = new Date() } = {}) {
     ...reconcileDueDate(item.due_date, email.received_at, ourDates),
   }));
 
+  // Category comes from the rules. Measured over the sample inbox, the small
+  // model answered 'newsletter' for 35 of 36 emails, so its category is only
+  // consulted where the rules found no signal at all.
+  const category = rules.category === 'other' && ai.category !== 'newsletter'
+    ? ai.category
+    : rules.category;
+
   return {
     classification: {
-      category: bulkCapped ? rules.category : ai.category,
+      category,
       priority,
       score: rules.score,
       reason: reason.slice(0, 160),

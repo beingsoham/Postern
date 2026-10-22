@@ -47,8 +47,10 @@ export function AppShell({ aiStatus }) {
         </div>
       </aside>
 
-      <main className="min-w-0 flex-1 overflow-y-auto">
-        <Outlet />
+      <main className="min-w-0 flex-1 overflow-hidden">
+        <div className="h-full overflow-y-auto">
+          <Outlet />
+        </div>
       </main>
     </div>
   );

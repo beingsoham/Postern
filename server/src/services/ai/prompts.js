@@ -9,7 +9,7 @@ export const CLASSIFY_SYSTEM = [
   '',
   'Rules:',
   '- Never invent a date. If no explicit date is stated, use null.',
-  '- A newsletter or promotion is low priority however urgent its wording.',
+  '- Bulk or promotional mail is low priority however urgent its wording.',
   '- requires_reply is true only when a person asks something of the reader.',
   '- action_items must be things the reader must do, copied from the email.',
   '- reason is one short sentence, under 160 characters.',

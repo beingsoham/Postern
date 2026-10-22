@@ -4,6 +4,7 @@ import { AppShell } from './components/AppShell.jsx';
 import { useAiStatus } from './hooks/useAiStatus.js';
 import { Briefing } from './pages/Briefing.jsx';
 import { DesignSystem } from './pages/DesignSystem.jsx';
+import { Inbox } from './pages/Inbox.jsx';
 import { Placeholder } from './pages/Placeholder.jsx';
 
 export default function App() {
@@ -14,12 +15,7 @@ export default function App() {
       <Routes>
         <Route element={<AppShell aiStatus={aiStatus} />}>
           <Route index element={<Briefing />} />
-          <Route
-            path="inbox"
-            element={
-              <Placeholder title="Inbox" description="The message list arrives with Prompt 10." />
-            }
-          />
+          <Route path="inbox" element={<Inbox />} />
           <Route
             path="tasks"
             element={

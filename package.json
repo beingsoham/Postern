@@ -21,7 +21,8 @@
     "lint": "eslint .",
     "db:migrate": "npm run db:migrate --workspace=server",
     "db:seed": "npm run db:seed --workspace=server",
-    "doctor": "node --env-file-if-exists=.env cli/doctor.js"
+    "doctor": "node --env-file-if-exists=.env cli/doctor.js",
+    "eval": "npm run eval --workspace=server"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

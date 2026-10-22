@@ -9,7 +9,8 @@
     "start": "node --env-file-if-exists=../.env src/index.js",
     "test": "vitest run",
     "db:migrate": "node --env-file-if-exists=../.env src/db/migrate.js",
-    "db:seed": "node --env-file-if-exists=../.env src/db/seed.js"
+    "db:seed": "node --env-file-if-exists=../.env src/db/seed.js",
+    "eval": "node --env-file-if-exists=../.env eval.js"
   },
   "dependencies": {
     "better-sqlite3": "^13.0.3",

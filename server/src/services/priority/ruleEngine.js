@@ -1,5 +1,5 @@
 import {
-  ACADEMIC_WORDS, DEADLINE_WORDS, FINANCE_WORDS, NEWSLETTER_WORDS,
+  ACADEMIC_WORDS, DEADLINE_WORDS, FAILURE_WORDS, FINANCE_WORDS, NEWSLETTER_WORDS,
   NO_REPLY_PATTERNS, RECRUITER_WORDS, SECURITY_WORDS, SOCIAL_WORDS,
   WORK_WORDS, anyMatch, countHits,
 } from './signals.js';
@@ -16,10 +16,19 @@ const CATEGORY_WORDS = {
 
 // Bulk mail is recognised from its shape, not its words. This is what keeps a
 // newsletter shouting URGENT from ever becoming urgent.
+//
+// A List-Unsubscribe header, or unsubscribe language in the body, means the
+// sender is broadcasting. A no-reply address does NOT: a failing build and a
+// security alert both arrive from notifications@, and neither is marketing.
+// That distinction only decides whether a reply is expected.
 function looksLikeBulk(email, haystack) {
   if (email.list_unsubscribe) return true;
-  if (anyMatch(email.sender ?? '', NO_REPLY_PATTERNS)) return true;
   return countHits(haystack, NEWSLETTER_WORDS) > 0;
+}
+
+// Automated senders never expect a reply, whatever else is true of them.
+function isAutomatedSender(email) {
+  return anyMatch(email.sender ?? '', NO_REPLY_PATTERNS);
 }
 
 function pickCategory(haystack, bulk) {
@@ -80,8 +89,14 @@ export function analyzeWithRules(email, now = new Date()) {
 
   // A direct question usually wants an answer from a human.
   const asksQuestion = /\?/.test(email.subject ?? '') || /\?/.test(email.body ?? '');
-  const fromPerson = !anyMatch(email.sender ?? '', NO_REPLY_PATTERNS) && !bulk;
+  const fromPerson = !isAutomatedSender(email) && !bulk;
   if (asksQuestion && fromPerson) { score += 18; signals.push('direct question'); }
+
+  const failureHits = countHits(haystack, FAILURE_WORDS);
+  if (failureHits && !bulk) {
+    score += Math.min(failureHits * 15, 30);
+    signals.push('something has failed or is blocked');
+  }
 
   if (category === 'security' && !bulk) { score += 25; signals.push('security topic'); }
   if (category === 'recruiting' && fromPerson) { score += 12; signals.push('recruiter contact'); }

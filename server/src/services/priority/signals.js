@@ -7,6 +7,14 @@ export const DEADLINE_WORDS = [
   'last chance', 'final hours', 'no further extensions',
 ];
 
+// Something is broken or has gone wrong. This carries no deadline wording,
+// which is why a failing build scored as low as a routine note before.
+export const FAILURE_WORDS = [
+  'failed', 'failing', 'failure', 'error', 'exception', 'crash', 'broken',
+  'outage', 'incident', 'declined', 'rejected', 'expired', 'blocked',
+  'on hold', 'unable to',
+];
+
 export const SECURITY_WORDS = [
   'password', 'sign-in', 'signin', 'login', 'suspicious', 'unauthorised',
   'unauthorized', 'unrecognised', 'unrecognized', 'breach', 'advisory',

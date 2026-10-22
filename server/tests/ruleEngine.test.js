@@ -196,3 +196,30 @@ describe('bare adverbs are not deadlines', () => {
     expect(r.signals).not.toContain('date within a day');
   });
 });
+
+describe('automated senders are not newsletters', () => {
+  it('lets a CI failure from notifications@ be urgent', () => {
+    const r = analyzeWithRules(email({
+      subject: 'CI failed on main: 3 tests failing',
+      body: 'The workflow run for commit 9ac12fe failed. 3 tests failed. '
+          + 'View the full log in the Actions tab.',
+      sender: 'notifications@github.com',
+    }), NOW);
+
+    expect(r.category).not.toBe('newsletter');
+    expect(r.priority).not.toBe('low');
+    expect(r.requires_reply).toBe(false);
+  });
+
+  it('still caps anything carrying List-Unsubscribe', () => {
+    const r = analyzeWithRules(email({
+      subject: 'URGENT: act now, offer ends tonight',
+      body: 'Final hours. Unsubscribe from these emails.',
+      sender: 'promo@shop.example',
+      list_unsubscribe: 1,
+    }), NOW);
+
+    expect(r.priority).toBe('low');
+    expect(r.category).toBe('newsletter');
+  });
+});
