@@ -201,8 +201,8 @@ Over the 40-email sample inbox on `qwen3:1.7b`:
 
 ```
 emails scored : 36
-category      : 31/36   86%
-priority      : 21/36   58%
+category      : 29/36   81%
+priority      : 19/36   53%
 fallbacks     : 0/36
 full inbox    : ~54s
 ```
@@ -210,6 +210,11 @@ full inbox    : ~54s
 Priority misses are mostly a single level — `important` where `urgent` was
 expected. The expected values are editorial judgements stored beside the sample
 data, so treat the score as a regression baseline, not a grade.
+
+These numbers moved down slightly when urgency was recalibrated: a third of the
+inbox used to come out urgent, which scored better against the labels and read
+worse as an inbox. Run `npm run eval` to see the current figures rather than
+trusting these.
 
 Three cases in the sample exist specifically to be got right:
 
