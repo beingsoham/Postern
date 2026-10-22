@@ -52,6 +52,11 @@ export const api = {
   },
   updateTask: (id, patch) => request(`/tasks/${id}`, { method: 'PATCH', body: patch }),
 
+  settings: () => request('/settings'),
+  updateSettings: (patch) => request('/settings', { method: 'PATCH', body: patch }),
+  deleteAllData: () =>
+    request('/data', { method: 'DELETE', body: { confirm: 'delete all local data' } }),
+
   followUps: () => request('/follow-ups'),
   detectFollowUps: () => request('/follow-ups/detect', { method: 'POST' }),
   updateFollowUp: (id, status) =>

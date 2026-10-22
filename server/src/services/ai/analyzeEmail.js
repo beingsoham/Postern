@@ -7,6 +7,20 @@ import { CLASSIFY_SYSTEM, classifyUser } from './prompts.js';
 import { ClassificationSchema, classificationFormat } from './schemas.js';
 
 const ORDER = ['low', 'normal', 'important', 'urgent'];
+
+// The model sometimes pastes a machine timestamp into the description it
+// writes. The date belongs in due_date; a task should read like a sentence.
+const ISO_TIMESTAMP = /\s*\b\d{4}-\d{2}-\d{2}T[\d:.]+Z?\b/g;
+
+function tidyDescription(text) {
+  return text
+    .replace(ISO_TIMESTAMP, '')
+    .replace(/\s+/g, ' ')
+    .replace(/\s+([.,;:])/g, '$1')
+    .replace(/\s*\b(by|on|before|due)\s*$/i, '')
+    .trim()
+    .slice(0, 300);
+}
 const distance = (a, b) => Math.abs(ORDER.indexOf(a) - ORDER.indexOf(b));
 
 /**
@@ -29,11 +43,20 @@ function reconcileDueDate(modelDate, receivedAt, parsedDates) {
   // The decisive check: we must have found this date in the email ourselves.
   // An ambiguous date was deliberately left unresolved, so it is not here and
   // the model cannot smuggle a guess past us.
-  const ours = new Set(
-    parsedDates.filter((d) => d.iso && !d.ambiguous).map((d) => d.iso.slice(0, 10)),
-  );
+  const ourDays = parsedDates
+    .filter((d) => d.iso && !d.ambiguous)
+    .map((d) => d.iso.slice(0, 10));
 
-  return ours.has(day) ? { due_date: day, verification: 'verified' } : unverified;
+  if (ourDays.includes(day)) return { due_date: day, verification: 'verified' };
+
+  // The model pointed at the wrong day. If we found exactly one unambiguous
+  // date in the email there is no ambiguity about which it meant, so use our
+  // own parse. With several candidates, guessing would be exactly the thing
+  // this check exists to prevent.
+  const distinct = [...new Set(ourDays)];
+  if (distinct.length === 1) return { due_date: distinct[0], verification: 'verified' };
+
+  return unverified;
 }
 
 /**
@@ -111,7 +134,7 @@ export async function analyzeEmail(email, { now = new Date() } = {}) {
   const ourDates = extractDates(`${email.subject ?? ''} ${email.body ?? ''}`, email.received_at);
 
   const actionItems = ai.action_items.map((item) => ({
-    description: item.description.slice(0, 300),
+    description: tidyDescription(item.description),
     ...reconcileDueDate(item.due_date, email.received_at, ourDates),
   }));
 

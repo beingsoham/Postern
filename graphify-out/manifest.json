@@ -6,9 +6,9 @@
     "semantic_hash": ""
   },
   "client/src/App.jsx": {
-    "mtime": 1792663056.1929915,
-    "seen": 1792663531.795986,
-    "ast_hash": "af235e444b4f973f03ec400433d173a6",
+    "mtime": 1792663703.5398438,
+    "seen": 1792663988.418299,
+    "ast_hash": "6a533044eb12f6ceb799df81acdd1666",
     "semantic_hash": ""
   },
   "client/src/components/AppShell.jsx": {
@@ -95,12 +95,6 @@
     "ast_hash": "8145128d0c9da62e01e6c589c2e4c5bb",
     "semantic_hash": ""
   },
-  "client/src/pages/Placeholder.jsx": {
-    "mtime": 1792659015.1631513,
-    "seen": 1792661763.0268898,
-    "ast_hash": "75432653eb9c7259915ea37fd643ac98",
-    "semantic_hash": ""
-  },
   "client/vite.config.js": {
     "mtime": 1792658631.6581764,
     "seen": 1792661763.0268927,
@@ -126,9 +120,9 @@
     "semantic_hash": ""
   },
   "server/src/app.js": {
-    "mtime": 1792662343.4258997,
-    "seen": 1792662457.5525265,
-    "ast_hash": "9193e155ccf46883460574c7823bf329",
+    "mtime": 1792663623.4289615,
+    "seen": 1792663988.4198947,
+    "ast_hash": "78cea82a07cdfbad539fcb0c98af956a",
     "semantic_hash": ""
   },
   "server/src/config.js": {
@@ -270,9 +264,9 @@
     "semantic_hash": ""
   },
   "client/src/services/api.js": {
-    "mtime": 1792662388.53693,
-    "seen": 1792662457.5522792,
-    "ast_hash": "345227ef203a1ead01a1507350e76534",
+    "mtime": 1792663651.4667058,
+    "seen": 1792663988.419645,
+    "ast_hash": "875cb7aea5a9f4c519db8244e1dba201",
     "semantic_hash": ""
   },
   "server/src/routes/analyze.js": {
@@ -288,9 +282,9 @@
     "semantic_hash": ""
   },
   "server/src/services/ai/analyzeEmail.js": {
-    "mtime": 1792663298.347083,
-    "seen": 1792663531.798541,
-    "ast_hash": "1fe733c2af9ed2f1e3bd241ed37f7474",
+    "mtime": 1792663838.844605,
+    "seen": 1792663988.4208515,
+    "ast_hash": "8b97d9fdffb0caabbef2addfbddcab20",
     "semantic_hash": ""
   },
   "server/src/services/ai/clean.js": {
@@ -399,6 +393,30 @@
     "mtime": 1792663298.3538704,
     "seen": 1792663531.7973611,
     "ast_hash": "327559dd4acc8f1f2d6e206465a95550",
+    "semantic_hash": ""
+  },
+  "client/src/pages/FollowUps.jsx": {
+    "mtime": 1792663666.685846,
+    "seen": 1792663988.4195762,
+    "ast_hash": "f163d9b1c6856eafd49096b712a990a0",
+    "semantic_hash": ""
+  },
+  "client/src/pages/Settings.jsx": {
+    "mtime": 1792663695.4758441,
+    "seen": 1792663988.4196396,
+    "ast_hash": "876ac8da051803e72249befb158e8b21",
+    "semantic_hash": ""
+  },
+  "client/src/pages/Tasks.jsx": {
+    "mtime": 1792663651.4758472,
+    "seen": 1792663988.4196424,
+    "ast_hash": "28f890ffb93baebc4afb3afbe881bec5",
+    "semantic_hash": ""
+  },
+  "server/src/routes/settings.js": {
+    "mtime": 1792663623.380849,
+    "seen": 1792663988.4207895,
+    "ast_hash": "2937bb6e16572fc9a1addca2835c42dc",
     "semantic_hash": ""
   }
 }

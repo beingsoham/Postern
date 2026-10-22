@@ -8,6 +8,7 @@ import { tasksRouter } from './routes/tasks.js';
 import { followUpsRouter } from './routes/followUps.js';
 import { analyzeRouter } from './routes/analyze.js';
 import { briefingRouter } from './routes/briefing.js';
+import { settingsRouter } from './routes/settings.js';
 import { notFound } from './middleware/notFound.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
@@ -29,6 +30,7 @@ export function createApp() {
   app.use('/api', followUpsRouter);
   app.use('/api', analyzeRouter);
   app.use('/api', briefingRouter);
+  app.use('/api', settingsRouter);
 
   // Order matters: unmatched route first, then the single error handler.
   app.use(notFound);
