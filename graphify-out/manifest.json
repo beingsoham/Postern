@@ -102,9 +102,9 @@
     "semantic_hash": ""
   },
   "eslint.config.js": {
-    "mtime": 1792661962.7056546,
-    "seen": 1792661988.7368252,
-    "ast_hash": "8b509ff56af8c51c8466d7ee42de90d4",
+    "mtime": 1792666659.495806,
+    "seen": 1792666739.1368244,
+    "ast_hash": "e292c994e15b48b627c14c81b80682ad",
     "semantic_hash": ""
   },
   "package.json": {
@@ -186,9 +186,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1792664749.528775,
-    "seen": 1792664792.4934351,
-    "ast_hash": "e19e00db4b715823a31106e8a7c52256",
+    "mtime": 1792666703.5188298,
+    "seen": 1792666739.139253,
+    "ast_hash": "a12845605bb2384a822bf3aa48af86ac",
     "semantic_hash": ""
   },
   "client/index.html": {
@@ -282,9 +282,9 @@
     "semantic_hash": ""
   },
   "server/src/services/ai/analyzeEmail.js": {
-    "mtime": 1792666231.711079,
-    "seen": 1792666266.2384026,
-    "ast_hash": "cee2f217aee66dca08c7816cf4e66198",
+    "mtime": 1792666460.342031,
+    "seen": 1792666739.1380398,
+    "ast_hash": "d4a4a0e6e4e802e041336645f5e13c63",
     "semantic_hash": ""
   },
   "server/src/services/ai/clean.js": {
@@ -318,9 +318,9 @@
     "semantic_hash": ""
   },
   "server/src/services/briefing.js": {
-    "mtime": 1792664094.628818,
-    "seen": 1792664252.1854823,
-    "ast_hash": "56b5cedde2090101595fa0f85a7604a3",
+    "mtime": 1792666472.579662,
+    "seen": 1792666739.1383655,
+    "ast_hash": "8717ad903bb9e3cdec47aee46dd32ff5",
     "semantic_hash": ""
   },
   "server/src/services/drafts.js": {
@@ -408,9 +408,9 @@
     "semantic_hash": ""
   },
   "client/src/pages/Tasks.jsx": {
-    "mtime": 1792666090.8498898,
-    "seen": 1792666266.2368877,
-    "ast_hash": "91a03e9e1a8dd269a0957020a062e3de",
+    "mtime": 1792666659.4950688,
+    "seen": 1792666739.1365774,
+    "ast_hash": "3d2ba9044bf032ea5625369b8d5a52b8",
     "semantic_hash": ""
   },
   "server/src/routes/settings.js": {
@@ -483,6 +483,24 @@
     "mtime": 1792664543.2203875,
     "seen": 1792664792.4933062,
     "ast_hash": "49b8eac7e202fdcc1ccd3a5448539e87",
+    "semantic_hash": ""
+  },
+  "docs/briefing.jpg": {
+    "mtime": 1792666604.8556533,
+    "seen": 1792666739.1393068,
+    "ast_hash": "1f279819665683996403556063a39360",
+    "semantic_hash": ""
+  },
+  "docs/inbox.jpg": {
+    "mtime": 1792666627.299035,
+    "seen": 1792666739.1393096,
+    "ast_hash": "05580cbb851fc2a0209b96a54244be6f",
+    "semantic_hash": ""
+  },
+  "docs/tasks.jpg": {
+    "mtime": 1792666694.6756475,
+    "seen": 1792666739.1393118,
+    "ast_hash": "0f89b87a366b370b5094f0f49cdd2109",
     "semantic_hash": ""
   }
 }

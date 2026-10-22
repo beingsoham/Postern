@@ -32,10 +32,12 @@ export default [
       globals: { ...globals.browser },
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
-    rules: {
-      // React 17+ JSX transform needs no React import.
-      'no-undef': 'off',
-    },
+    // no-undef stays ON here. It was switched off to accommodate the React
+    // JSX transform, and in doing so it hid a genuine ReferenceError: a
+    // component used two helpers that were never imported, and only crashed
+    // in the browser. The transform needs its globals declared, not the rule
+    // disabled.
+    rules: {},
   },
 
   // Tests get the Vitest globals-free API, but describe/it come from imports.

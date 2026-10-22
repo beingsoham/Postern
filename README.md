@@ -21,9 +21,20 @@ The model never sends mail, never invents a deadline, and never triggers an
 action on its own. Everything it returns is validated before it is stored, and
 there is a deterministic rule engine underneath that works with no model at all.
 
-<!-- Screenshots: briefing, inbox and reader, tasks -->
-<!-- ![Briefing](docs/briefing.png) -->
-<!-- ![Inbox](docs/inbox.png) -->
+![The briefing: what needs you today, why, and what is overdue](docs/briefing.jpg)
+
+<p align="center"><em>The briefing. Each section says what it selects for, and
+overdue work surfaces above everything else.</em></p>
+
+![The inbox and reader, with the priority reason and extracted tasks](docs/inbox.jpg)
+
+<p align="center"><em>The inbox. Every priority carries a reason you can
+correct, and the model that produced it is named in the corner.</em></p>
+
+![Tasks grouped by when they are due](docs/tasks.jpg)
+
+<p align="center"><em>Tasks, grouped by when they are due. A date that was not
+confirmed against the email text is labelled, not hidden.</em></p>
 
 ## What it does
 

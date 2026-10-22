@@ -19,9 +19,13 @@ export function gatherFacts(db, { withinDays = 3 } = {}) {
 
   const replies = db
     .prepare(
+      // Low priority is excluded for the same reason it cannot create tasks:
+      // mail we judged unimportant does not get to claim a place in the
+      // briefing. Without this the injected sample, which asks to be replied
+      // to, appeared under 'Reply needed'.
       `SELECT e.id, e.subject, e.sender_name, e.sender
        FROM emails e JOIN classifications c ON c.email_id = e.id
-       WHERE c.requires_reply = 1 AND e.direction = 'in'
+       WHERE c.requires_reply = 1 AND e.direction = 'in' AND c.priority != 'low'
        ORDER BY e.received_at DESC LIMIT 5`,
     )
     .all();
@@ -81,11 +85,28 @@ function dropUnknownReferences(briefing, facts) {
 
   return {
     ...briefing,
-    needs_attention: briefing.needs_attention.filter((i) => emailIds.has(i.email_id)),
-    reply_needed: briefing.reply_needed.filter((i) => emailIds.has(i.email_id)),
-    action_items: briefing.action_items.filter((i) => taskIds.has(i.task_id)),
+    needs_attention: tidyItems(
+      briefing.needs_attention.filter((i) => emailIds.has(i.email_id)),
+    ),
+    reply_needed: tidyItems(briefing.reply_needed.filter((i) => emailIds.has(i.email_id))),
+    action_items: tidyItems(briefing.action_items.filter((i) => taskIds.has(i.task_id))),
   };
 }
+
+// The model repeats a machine date inside the sentence it writes. The date is
+// already stored and rendered separately, so it is noise here.
+const ISO_DATE = /\s*\b\d{4}-\d{2}-\d{2}(T[\d:.]+Z?)?\b/g;
+
+const tidyNote = (note) =>
+  note
+    .replace(ISO_DATE, '')
+    .replace(/\s+/g, ' ')
+    .replace(/\s+([.,;:])/g, '$1')
+    .replace(/\s*\b(by|on|before|due|until)\s*\.?\s*$/i, '')
+    .trim()
+    .replace(/\s*\.$/, '');
+
+const tidyItems = (items) => items.map((i) => ({ ...i, note: tidyNote(i.note) }));
 
 export async function buildBriefing(db, options) {
   const facts = gatherFacts(db, options);

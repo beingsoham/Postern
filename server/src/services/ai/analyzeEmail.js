@@ -179,7 +179,10 @@ export async function analyzeEmail(email, { now = new Date() } = {}) {
       model: result.model,
       status: 'ok',
     },
-    actionItems: actionItems.length ? actionItems : ruleTasks,
+    // The rule-derived task is a fallback for when the model found nothing,
+    // not a way around the gate above: low priority mail gets no task from
+    // either source.
+    actionItems: actionItems.length ? actionItems : priority === 'low' ? [] : ruleTasks,
   };
 }
 
