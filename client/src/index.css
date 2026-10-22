@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/* Design tokens from the specification's 'Ink and Amber' system.
+   Prompt 2 builds the full component layer on top of these. */
+@theme {
+  --color-bg: #0E0F12;
+  --color-surface: #15171C;
+  --color-surface-2: #1B1E25;
+  --color-border: #262A33;
+  --color-text: #ECEAE4;
+  --color-muted: #8B909A;
+  --color-accent: #E8B04A;
+  --color-local-ai: #5ED1B1;
+  --color-urgent: #F0654D;
+  --color-important: #E8B04A;
+  --color-normal: #7AA2D6;
+  --color-low: #5B6070;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
