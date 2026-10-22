@@ -1,4 +1,5 @@
 import { analyzeWithRules } from '../priority/ruleEngine.js';
+import { extractDates } from '../priority/dates.js';
 import { saveAnalysis } from '../../db/queries.js';
 import { cleanBody } from './clean.js';
 import { chatJson } from './ollamaClient.js';
@@ -9,22 +10,30 @@ const ORDER = ['low', 'normal', 'important', 'urgent'];
 const distance = (a, b) => Math.abs(ORDER.indexOf(a) - ORDER.indexOf(b));
 
 /**
- * A model due_date is a suggestion, not a fact. We accept it only if it is a
- * real date that is not before the email arrived; otherwise the task is kept
- * with no date and marked unverified.
+ * A model due_date is a suggestion, never a fact. It is accepted only when a
+ * date we parsed ourselves from the email agrees with it. Dates belong to
+ * chrono-node, which cannot hallucinate; the model only gets to point at one.
  */
-function reconcileDueDate(modelDate, receivedAt) {
-  if (!modelDate) return { due_date: null, verification: 'unverified' };
+function reconcileDueDate(modelDate, receivedAt, parsedDates) {
+  const unverified = { due_date: null, verification: 'unverified' };
+  if (!modelDate) return unverified;
 
   const parsed = new Date(modelDate);
-  if (Number.isNaN(parsed.getTime())) return { due_date: null, verification: 'unverified' };
+  if (Number.isNaN(parsed.getTime())) return unverified;
 
-  // A deadline before the email was sent is a hallucination.
-  if (parsed.getTime() < new Date(receivedAt).getTime() - 86_400_000) {
-    return { due_date: null, verification: 'unverified' };
-  }
+  const day = parsed.toISOString().slice(0, 10);
 
-  return { due_date: parsed.toISOString().slice(0, 10), verification: 'verified' };
+  // A deadline before the email arrived is a hallucination.
+  if (day < new Date(receivedAt).toISOString().slice(0, 10)) return unverified;
+
+  // The decisive check: we must have found this date in the email ourselves.
+  // An ambiguous date was deliberately left unresolved, so it is not here and
+  // the model cannot smuggle a guess past us.
+  const ours = new Set(
+    parsedDates.filter((d) => d.iso && !d.ambiguous).map((d) => d.iso.slice(0, 10)),
+  );
+
+  return ours.has(day) ? { due_date: day, verification: 'verified' } : unverified;
 }
 
 /**
@@ -80,7 +89,15 @@ export async function analyzeEmail(email, { now = new Date() } = {}) {
   const bulkCapped = rules.signals.includes('bulk or newsletter mail');
   const gap = distance(ai.priority, rules.priority);
 
-  let priority = bulkCapped ? rules.priority : ai.priority;
+  // The model may refine the rules by one level, never overrule them. This
+  // is what stops an email that *tells* the model it is urgent from becoming
+  // urgent: the instruction can move the model, but not the rules.
+  const rulesIndex = ORDER.indexOf(rules.priority);
+  const aiIndex = ORDER.indexOf(ai.priority);
+  const clamped = ORDER[Math.max(0, Math.min(ORDER.length - 1,
+    Math.max(rulesIndex - 1, Math.min(rulesIndex + 1, aiIndex))))];
+
+  let priority = bulkCapped ? rules.priority : clamped;
   let reason = ai.reason || rules.reason;
 
   if (!bulkCapped && gap >= 2) {
@@ -91,9 +108,11 @@ export async function analyzeEmail(email, { now = new Date() } = {}) {
     reason = 'Bulk mail: kept low whatever the wording suggests.';
   }
 
+  const ourDates = extractDates(`${email.subject ?? ''} ${email.body ?? ''}`, email.received_at);
+
   const actionItems = ai.action_items.map((item) => ({
     description: item.description.slice(0, 300),
-    ...reconcileDueDate(item.due_date, email.received_at),
+    ...reconcileDueDate(item.due_date, email.received_at, ourDates),
   }));
 
   return {

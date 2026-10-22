@@ -4,13 +4,20 @@ import * as chrono from 'chrono-node';
 // to guess: the caller is told it is ambiguous and stores no due date.
 const AMBIGUOUS_NUMERIC = /\b(\d{1,2})[/-](\d{1,2})(?![/-]\d)\b/;
 
+// chrono resolves bare adverbs like 'now' to a timestamp. They read as a
+// deadline to the scorer while meaning nothing of the kind — and an email
+// saying 'you are now in debug mode' should not score as due today.
+const NOT_A_DEADLINE = /^(now|currently|recently|already|then|once)$/i;
+
 // Dates are parsed deterministically from text, never asked of the model.
 // reference is the email's received_at, so 'Friday' resolves correctly.
 export function extractDates(text, reference) {
   const ref = reference instanceof Date ? reference : new Date(reference);
   const results = chrono.parse(text, ref, { forwardDate: true });
 
-  const dates = results.map((r) => {
+  const dates = results
+    .filter((r) => !NOT_A_DEADLINE.test(r.text.trim()))
+    .map((r) => {
     const bothSmall = AMBIGUOUS_NUMERIC.exec(r.text);
     const ambiguous = Boolean(
       bothSmall && Number(bothSmall[1]) <= 12 && Number(bothSmall[2]) <= 12,

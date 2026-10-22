@@ -17,7 +17,11 @@ export const ClassificationSchema = z.object({
     .array(
       z.object({
         description: z.string().trim().min(1).max(300),
-        due_date: z.string().date().nullable(),
+        // Any non-empty string is accepted here. Whether it is a real,
+        // plausible date is decided by reconcileDueDate, which has the
+        // email timestamp to check it against. Rejecting the shape at this
+        // layer threw away otherwise correct classifications.
+        due_date: z.string().trim().min(1).nullable().catch(null),
       }),
     )
     .max(8)

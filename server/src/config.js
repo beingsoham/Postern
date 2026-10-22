@@ -23,7 +23,7 @@ export const config = {
   // Body limit keeps a hostile request from exhausting memory.
   jsonBodyLimit: process.env.JSON_BODY_LIMIT ?? '1mb',
   ollamaUrl: process.env.OLLAMA_URL ?? 'http://127.0.0.1:11434',
-  ollamaModel: process.env.OLLAMA_MODEL ?? 'qwen3:4b',
+  ollamaModel: process.env.OLLAMA_MODEL ?? 'qwen3:1.7b',
   projectRoot,
   dbPath: resolveFromRoot(process.env.DB_PATH ?? './data/postern.db'),
   isTest: process.env.NODE_ENV === 'test',

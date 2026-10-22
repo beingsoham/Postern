@@ -114,9 +114,9 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1792661912.0629613,
-    "seen": 1792661988.736829,
-    "ast_hash": "5eaba9a0df5954838e4aa278625d5165",
+    "mtime": 1792662818.7069018,
+    "seen": 1792662885.7602558,
+    "ast_hash": "da0f17c898a4280939e2365792174bfe",
     "semantic_hash": ""
   },
   "server/package.json": {
@@ -132,9 +132,9 @@
     "semantic_hash": ""
   },
   "server/src/config.js": {
-    "mtime": 1792661947.85351,
-    "seen": 1792661988.7369108,
-    "ast_hash": "71b58e504c827ad4c1349c6e03a639d0",
+    "mtime": 1792662818.7176864,
+    "seen": 1792662885.7603385,
+    "ast_hash": "31a058b9cca4598518b0650257ce704a",
     "semantic_hash": ""
   },
   "server/src/db/db.js": {
@@ -234,9 +234,9 @@
     "semantic_hash": ""
   },
   "server/src/services/priority/dates.js": {
-    "mtime": 1792662114.425948,
-    "seen": 1792662177.5277696,
-    "ast_hash": "7f8e13da54f497a28ec39e89db34a952",
+    "mtime": 1792662786.5708275,
+    "seen": 1792662885.761334,
+    "ast_hash": "b38c36e0c27b51225f324674b022a5b7",
     "semantic_hash": ""
   },
   "server/src/services/priority/ruleEngine.js": {
@@ -252,9 +252,9 @@
     "semantic_hash": ""
   },
   "server/tests/ruleEngine.test.js": {
-    "mtime": 1792662145.0329459,
-    "seen": 1792662177.5278668,
-    "ast_hash": "3a78334d6407b59626f5f6bd816bd32b",
+    "mtime": 1792662786.578904,
+    "seen": 1792662885.761481,
+    "ast_hash": "1266794b9e404313cea44907ce63b4c8",
     "semantic_hash": ""
   },
   "client/src/hooks/useAsync.js": {
@@ -288,9 +288,9 @@
     "semantic_hash": ""
   },
   "server/src/services/ai/analyzeEmail.js": {
-    "mtime": 1792662256.0349388,
-    "seen": 1792662457.5535655,
-    "ast_hash": "7d9a03dc6d9eaa6034404272cb08b7f4",
+    "mtime": 1792662692.8448331,
+    "seen": 1792662885.7609916,
+    "ast_hash": "c3ac02fdb2dd61fca9f4175446cde6ce",
     "semantic_hash": ""
   },
   "server/src/services/ai/clean.js": {
@@ -318,9 +318,9 @@
     "semantic_hash": ""
   },
   "server/src/services/ai/schemas.js": {
-    "mtime": 1792662194.9959426,
-    "seen": 1792662457.5535798,
-    "ast_hash": "f128290c705fba227275082698a521f6",
+    "mtime": 1792662551.7820497,
+    "seen": 1792662885.7611995,
+    "ast_hash": "b91952e168eb403086b43b7f1f9ef445",
     "semantic_hash": ""
   },
   "server/src/services/briefing.js": {
@@ -339,6 +339,18 @@
     "mtime": 1792662343.382933,
     "seen": 1792662457.5535865,
     "ast_hash": "b10c3538c19d7708cb7edc09d6d71b66",
+    "semantic_hash": ""
+  },
+  "cli/doctor.js": {
+    "mtime": 1792662803.6773717,
+    "seen": 1792662885.759216,
+    "ast_hash": "620acb1d62e597c87d2bc274323e60dc",
+    "semantic_hash": ""
+  },
+  "server/tests/doctor.test.js": {
+    "mtime": 1792662504.1149225,
+    "seen": 1792662885.761433,
+    "ast_hash": "9f2084998e07c4113e30bd34f0d308e6",
     "semantic_hash": ""
   }
 }
