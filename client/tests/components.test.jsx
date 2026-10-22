@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 
 import { PriorityBadge } from '../src/components/PriorityBadge.jsx';
@@ -8,6 +9,7 @@ import { StatusPill } from '../src/components/StatusPill.jsx';
 import { EmailBody } from '../src/components/EmailBody.jsx';
 import { TaskRow } from '../src/components/TaskRow.jsx';
 import { MessageList } from '../src/components/MessageList.jsx';
+import { AppShell } from '../src/components/AppShell.jsx';
 
 describe('PriorityBadge', () => {
   // A colour alone is unreadable to anyone who cannot distinguish it.
@@ -143,15 +145,51 @@ describe('MessageList', () => {
     expect(screen.getByText(/unanalyzed/i)).toBeInTheDocument();
   });
 
-  it('badges sample mail so it cannot be mistaken for real mail', () => {
+  it('does not repeat a demo badge on every row', () => {
+    // Sample data is a property of the session, so the shell states it once.
+    // Forty copies of the same badge was noise, not information.
     render(
       <MessageList emails={emails} loading={false} selectedId={null} onSelect={vi.fn()} />,
     );
-    expect(screen.getAllByText(/demo/i)).toHaveLength(1);
+    expect(screen.queryByText(/^demo$/i)).not.toBeInTheDocument();
   });
 
   it('says so when nothing matches the filters', () => {
     render(<MessageList emails={[]} loading={false} selectedId={null} onSelect={vi.fn()} />);
     expect(screen.getByText(/no messages match/i)).toBeInTheDocument();
+  });
+});
+
+describe('AppShell', () => {
+  const shell = (aiStatus) =>
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route element={<AppShell aiStatus={aiStatus} />}>
+            <Route index element={<p>Page content</p>} />
+          </Route>
+        </Routes>
+      </MemoryRouter>,
+    );
+
+  it('states the demo context exactly once', () => {
+    shell({ model: 'qwen3:1.7b', reachable: true });
+    expect(screen.getAllByText(/^demo$/i)).toHaveLength(1);
+  });
+
+  it('shows every destination and the model status', () => {
+    shell({ model: 'qwen3:1.7b', reachable: true });
+
+    for (const label of ['Briefing', 'Inbox', 'Tasks', 'Follow-ups', 'Settings']) {
+      expect(screen.getByRole('link', { name: label })).toBeInTheDocument();
+    }
+    expect(screen.getByText('qwen3:1.7b')).toBeInTheDocument();
+    expect(screen.getByText(/running locally/i)).toBeInTheDocument();
+  });
+
+  it('renders the routed page inside the shell', () => {
+    shell({ model: null, reachable: false });
+    expect(screen.getByText('Page content')).toBeInTheDocument();
+    expect(screen.getByText(/unavailable/i)).toBeInTheDocument();
   });
 });

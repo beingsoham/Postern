@@ -16,7 +16,7 @@ function Row({ item, onStatus }) {
   const pending = item.status === 'pending';
 
   return (
-    <li className="border-b border-border px-4 py-3 last:border-b-0">
+    <li className="group border-b border-border px-4 py-2.5 last:border-b-0">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <Link
@@ -33,7 +33,10 @@ function Row({ item, onStatus }) {
         </div>
 
         {pending && (
-          <div className="flex shrink-0 gap-1">
+          <div
+            className="flex shrink-0 gap-1 opacity-0 transition-opacity duration-150
+                       group-hover:opacity-100 focus-within:opacity-100"
+          >
             <Button size="sm" onClick={() => onStatus(item.id, 'followed_up')}>
               Mark followed up
             </Button>
@@ -67,7 +70,7 @@ export function FollowUps() {
   const waiting = items.filter((i) => i.status === 'pending');
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-10">
+    <div className="mx-auto max-w-4xl px-8 py-12">
       <div className="mb-6 flex items-end justify-between gap-4">
         <div>
           <h1 className="font-display text-xl">Follow-ups</h1>

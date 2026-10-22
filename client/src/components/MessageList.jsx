@@ -1,5 +1,4 @@
 import { PriorityBadge } from './PriorityBadge.jsx';
-import { DemoBadge } from './DemoBadge.jsx';
 import { Skeleton } from './Skeleton.jsx';
 import { cn } from './cn.js';
 import { relativeTime } from '../lib/time.js';
@@ -11,16 +10,19 @@ function Row({ email, selected, onSelect }) {
       onClick={() => onSelect(email.id)}
       aria-current={selected ? 'true' : undefined}
       className={cn(
-        'w-full border-b border-border px-4 py-3 text-left',
+        'group relative w-full border-b border-border py-3 pr-4 pl-5 text-left',
         'transition-colors duration-150 ease-out',
         selected ? 'bg-surface-2' : 'hover:bg-surface-2/60',
+        // A 2px rail marks the selected row without moving anything.
+        selected &&
+          'before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-accent',
       )}
     >
       <div className="flex items-start justify-between gap-2">
         <span
           className={cn(
             'min-w-0 flex-1 truncate text-base',
-            email.is_read ? 'text-muted' : 'text-text',
+            email.is_read ? 'text-muted' : 'font-medium text-text',
           )}
         >
           {email.subject || '(no subject)'}
@@ -39,7 +41,6 @@ function Row({ email, selected, onSelect }) {
         <span className="min-w-0 flex-1 truncate font-mono text-xs text-muted">
           {email.sender_name ?? email.sender}
         </span>
-        {Boolean(email.is_demo) && <DemoBadge />}
       </div>
     </button>
   );

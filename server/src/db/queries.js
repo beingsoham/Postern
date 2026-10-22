@@ -63,11 +63,23 @@ export function saveAnalysis(db, emailId, { classification, actionItems }) {
        VALUES (@email_id, @category, @priority, @score, @reason,
                @requires_reply, @model, @status, @created_at)
        ON CONFLICT (email_id) DO UPDATE SET
-         category = excluded.category, priority = excluded.priority,
-         score = excluded.score, reason = excluded.reason,
-         requires_reply = excluded.requires_reply, model = excluded.model,
-         status = excluded.status, created_at = excluded.created_at
-       WHERE classifications.user_override = 0`,
+         -- A correction is about the priority, nothing else. Freezing the
+         -- whole row left the model name and reason stale forever, so a
+         -- corrected email went on reporting whichever model first saw it.
+         priority = CASE
+           WHEN classifications.user_override = 1 THEN classifications.priority
+           ELSE excluded.priority
+         END,
+         reason = CASE
+           WHEN classifications.user_override = 1 THEN 'You set this priority.'
+           ELSE excluded.reason
+         END,
+         category = excluded.category,
+         score = excluded.score,
+         requires_reply = excluded.requires_reply,
+         model = excluded.model,
+         status = excluded.status,
+         created_at = excluded.created_at`,
     ).run({ email_id: emailId, created_at: nowIso(), ...classification });
 
     // Only machine-made rows are cleared; anything the user touched stays.

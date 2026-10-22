@@ -1,14 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  EmptyState,
-  SkeletonText,
-} from '../components/index.js';
+import { Button, Card, CardBody, EmptyState, SkeletonText } from '../components/index.js';
 import { useAsync } from '../hooks/useAsync.js';
 import { api } from '../services/api.js';
 
@@ -41,7 +34,7 @@ function TaskItem({ task, onChange }) {
   }
 
   return (
-    <li className="border-b border-border px-4 py-3 last:border-b-0">
+    <li className="group border-b border-border px-4 py-2.5 last:border-b-0">
       <div className="flex items-start gap-3">
         <input
           type="checkbox"
@@ -57,7 +50,7 @@ function TaskItem({ task, onChange }) {
               <input
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full rounded-control border border-border bg-bg px-2 py-1 text-base"
+                className="w-full rounded-control border border-control bg-bg px-2 py-1 text-base"
                 aria-label="Task description"
               />
               <div className="flex items-center gap-2">
@@ -65,7 +58,7 @@ function TaskItem({ task, onChange }) {
                   type="date"
                   value={dueDate}
                   onChange={(e) => setDueDate(e.target.value)}
-                  className="rounded-control border border-border bg-bg px-2 py-1 font-mono text-xs"
+                  className="rounded-control border border-control bg-bg px-2 py-1 font-mono text-xs"
                   aria-label="Due date"
                 />
                 <Button size="sm" variant="primary" onClick={save}>
@@ -81,14 +74,32 @@ function TaskItem({ task, onChange }) {
               <p className={done ? 'text-base text-muted line-through' : 'text-base'}>
                 {task.description}
               </p>
-              <p className="mt-0.5 font-mono text-xs text-muted">
-                {task.due_date ? `due ${task.due_date}` : 'no date'}
-                {task.verification === 'unverified' && ' · unverified'}
-                {task.email_subject && ' · '}
+              <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs text-muted">
+                <span
+                  className={
+                    isOverdue(task.due_date) && !done ? 'font-mono text-urgent' : 'font-mono'
+                  }
+                >
+                  {task.due_date ? dueLabel(task.due_date) : 'no date'}
+                </span>
+                {task.verification === 'unverified' && (
+                  <span
+                    className="rounded border border-border px-1 font-mono text-[0.65rem]"
+                    title="This date was not confirmed against the email text"
+                  >
+                    unverified
+                  </span>
+                )}
                 {task.email_subject && (
-                  <Link to={`/inbox?focus=${task.email_id}`} className="hover:text-text">
-                    {task.email_subject}
-                  </Link>
+                  <>
+                    <span aria-hidden="true">·</span>
+                    <Link
+                      to={`/inbox?focus=${task.email_id}`}
+                      className="truncate hover:text-text"
+                    >
+                      {task.email_subject}
+                    </Link>
+                  </>
                 )}
               </p>
             </>
@@ -96,7 +107,10 @@ function TaskItem({ task, onChange }) {
         </div>
 
         {!editing && (
-          <div className="flex shrink-0 gap-1">
+          <div
+            className="flex shrink-0 gap-1 opacity-0 transition-opacity duration-150
+                       group-hover:opacity-100 focus-within:opacity-100"
+          >
             <Button size="sm" variant="ghost" onClick={() => setEditing(true)}>
               Edit
             </Button>
@@ -131,7 +145,7 @@ export function Tasks() {
   ]).filter(([, items]) => items.length);
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-10">
+    <div className="mx-auto max-w-4xl px-8 py-12">
       <div className="mb-6 flex items-end justify-between gap-4">
         <div>
           <h1 className="font-display text-xl">Tasks</h1>
@@ -163,8 +177,20 @@ export function Tasks() {
       ) : (
         <div className="space-y-4">
           {groups.map(([name, items]) => (
-            <Card key={name}>
-              <CardHeader title={`${name} · ${items.length}`} />
+            <Card
+              key={name}
+              className={name === 'Overdue' ? 'border-l-2 border-l-urgent' : undefined}
+            >
+              <div className="flex items-baseline gap-2.5 px-4 pt-3.5 pb-2">
+                <h2
+                  className={`font-sans text-md font-medium ${
+                    name === 'Overdue' ? 'text-urgent' : 'text-text'
+                  }`}
+                >
+                  {name}
+                </h2>
+                <span className="font-mono text-xs text-muted">{items.length}</span>
+              </div>
               <ul>
                 {items.map((task) => (
                   <TaskItem key={task.id} task={task} onChange={change} />

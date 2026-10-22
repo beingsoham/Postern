@@ -1,42 +1,82 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import {
-  Button,
-  Card,
-  CardBody,
-  CardHeader,
-  DemoBadge,
-  EmptyState,
-  SkeletonText,
-} from '../components/index.js';
+import { Button, Card, EmptyState, SkeletonText } from '../components/index.js';
 import { useAsync } from '../hooks/useAsync.js';
 import { api } from '../services/api.js';
+import { dueLabel, isOverdue } from '../lib/time.js';
 
-function ItemList({ items, idKey, to }) {
-  if (!items?.length) {
-    return <p className="text-base text-muted">Nothing here.</p>;
-  }
+// The three sections answer different questions, so they are weighted
+// differently rather than rendered as three identical boxes.
+const SECTIONS = [
+  {
+    key: 'needs_attention',
+    idKey: 'email_id',
+    title: 'Needs attention',
+    blurb: 'Ranked urgent or important',
+    accent: 'border-l-urgent',
+    to: (i) => `/inbox?focus=${i.email_id}`,
+  },
+  {
+    key: 'reply_needed',
+    idKey: 'email_id',
+    title: 'Reply needed',
+    blurb: 'Someone is waiting on you',
+    accent: 'border-l-important',
+    to: (i) => `/inbox?focus=${i.email_id}`,
+  },
+  {
+    key: 'action_items',
+    idKey: 'task_id',
+    title: 'Action items',
+    blurb: 'Due in the next three days',
+    accent: 'border-l-normal',
+    to: () => '/tasks',
+  },
+];
+
+function Section({ section, items }) {
+  const count = items?.length ?? 0;
 
   return (
-    <ul className="space-y-2">
-      {items.map((item) => (
-        <li key={item[idKey]}>
-          <Link
-            to={to(item)}
-            className="block rounded-control px-2 py-1.5 -mx-2 text-base
-                       transition-colors duration-150 ease-out hover:bg-surface-2"
-          >
-            {item.note}
-          </Link>
-        </li>
-      ))}
-    </ul>
+    <Card className={`animate-fade-up border-l-2 ${section.accent}`}>
+      <div className="flex items-baseline justify-between gap-3 px-4 pt-3.5 pb-2">
+        <div className="flex items-baseline gap-2.5">
+          <h2 className="font-sans text-md font-medium text-text">{section.title}</h2>
+          <span className="font-mono text-xs text-muted">{count}</span>
+        </div>
+        <span className="text-xs text-muted">{section.blurb}</span>
+      </div>
+
+      {count === 0 ? (
+        <p className="px-4 pt-1 pb-4 text-base text-muted">Nothing here.</p>
+      ) : (
+        <ul className="pb-1.5">
+          {items.map((item) => (
+            <li key={item[section.idKey]}>
+              <Link
+                to={section.to(item)}
+                className="group flex items-start gap-3 px-4 py-2
+                           transition-colors duration-150 ease-out hover:bg-surface-2"
+              >
+                <span
+                  className="mt-[0.45rem] size-1 shrink-0 rounded-full bg-border
+                             transition-colors group-hover:bg-accent"
+                  aria-hidden="true"
+                />
+                <span className="min-w-0 flex-1 text-base text-text">{item.note}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Card>
   );
 }
 
 export function Briefing() {
   const { data, error, loading, reload } = useAsync(() => api.briefing(), []);
+  const tasks = useAsync(() => api.tasks({ status: 'open' }), []);
   const [analyzing, setAnalyzing] = useState(false);
   const [progress, setProgress] = useState(null);
 
@@ -44,14 +84,15 @@ export function Briefing() {
 
   async function analyzeInbox() {
     setAnalyzing(true);
-    setProgress('Analyzing inbox locally…');
+    setProgress('Reading your inbox locally. This takes about a minute.');
     try {
       const result = await api.analyzeAll({ limit: 40 });
       setProgress(
-        `Analyzed ${result.analyzed}` +
-          (result.fallbacks ? `, ${result.fallbacks} fell back to rules` : ''),
+        `Analyzed ${result.analyzed} messages` +
+          (result.fallbacks ? `, ${result.fallbacks} used rules only` : ''),
       );
       reload();
+      tasks.reload();
     } catch (err) {
       setProgress(err.message);
     } finally {
@@ -59,108 +100,117 @@ export function Briefing() {
     }
   }
 
+  const overdue = (tasks.data?.tasks ?? []).filter((t) => isOverdue(t.due_date));
+  const empty =
+    briefing &&
+    !briefing.needs_attention.length &&
+    !briefing.reply_needed.length &&
+    !briefing.action_items.length;
+
   return (
-    <div className="mx-auto max-w-3xl px-6 py-10">
-      <div className="mb-8 flex items-start justify-between gap-4">
-        <div className="min-w-0">
+    <div className="mx-auto max-w-5xl px-8 py-12">
+      <header className="mb-8 flex items-start justify-between gap-8">
+        <div className="min-w-0 flex-1">
           {loading ? (
-            <SkeletonText lines={1} className="w-80" />
+            <SkeletonText lines={2} className="max-w-lg" />
           ) : (
-            <h1 className="font-display text-display leading-tight">
-              {briefing?.headline ?? 'Your briefing'}
-            </h1>
-          )}
-          {briefing?.next_step && (
-            <p className="mt-2 text-md text-muted">{briefing.next_step}</p>
+            <>
+              <h1 className="font-display text-display leading-[1.05] text-balance">
+                {briefing?.headline ?? 'Your briefing'}
+              </h1>
+              {briefing?.next_step && (
+                <p className="mt-3 max-w-xl text-md text-muted">{briefing.next_step}</p>
+              )}
+            </>
           )}
         </div>
 
-        <div className="flex shrink-0 flex-col items-end gap-2">
-          <Button variant="primary" onClick={analyzeInbox} disabled={analyzing}>
-            {analyzing ? 'Analyzing…' : 'Analyze inbox'}
-          </Button>
-          <DemoBadge />
-        </div>
-      </div>
+        <Button
+          variant="primary"
+          onClick={analyzeInbox}
+          disabled={analyzing}
+          className="shrink-0"
+        >
+          {analyzing ? 'Analyzing…' : 'Analyze inbox'}
+        </Button>
+      </header>
 
-      {progress && <p className="mb-4 font-mono text-xs text-muted">{progress}</p>}
+      {progress && (
+        <p className="mb-6 flex items-center gap-2 font-mono text-xs text-muted">
+          {analyzing && (
+            <span
+              className="size-1.5 animate-pulse rounded-full bg-accent"
+              aria-hidden="true"
+            />
+          )}
+          {progress}
+        </p>
+      )}
 
       {error && (
-        <Card className="mb-6 border-urgent/40">
-          <CardBody>
+        <Card className="mb-6 border-l-2 border-l-urgent">
+          <div className="p-4">
             <p className="text-base text-urgent">The backend is not reachable.</p>
             <p className="mt-1 text-base text-muted">{error.message}</p>
-          </CardBody>
+          </div>
         </Card>
       )}
 
-      {briefing?.source === 'rules' && !loading && (
-        <Card className="mb-6 border-accent/40">
-          <CardBody>
+      {briefing?.source === 'rules' && !loading && !empty && (
+        <Card className="mb-6 border-l-2 border-l-accent">
+          <div className="p-4">
             <p className="text-base text-accent">Built from rules</p>
             <p className="mt-1 text-base text-muted">
               The local model was unavailable or its answer failed validation, so this briefing
               was assembled deterministically from stored facts.
             </p>
-          </CardBody>
+          </div>
         </Card>
       )}
 
+      {overdue.length > 0 && !loading && (
+        <Link
+          to="/tasks"
+          className="mb-6 flex items-center gap-2.5 rounded-card border border-urgent/30
+                     bg-urgent/5 px-4 py-2.5 transition-colors hover:bg-urgent/10"
+        >
+          <span className="size-1.5 rounded-full bg-urgent" aria-hidden="true" />
+          <span className="text-base text-text">
+            {overdue.length} overdue {overdue.length === 1 ? 'task' : 'tasks'}
+          </span>
+          <span className="ml-auto font-mono text-xs text-muted">
+            oldest {dueLabel(overdue[overdue.length - 1]?.due_date)}
+          </span>
+        </Link>
+      )}
+
       {loading ? (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {[0, 1, 2].map((i) => (
             <Card key={i}>
-              <CardBody>
+              <div className="p-4">
                 <SkeletonText lines={3} />
-              </CardBody>
+              </div>
             </Card>
           ))}
         </div>
-      ) : !briefing ||
-        (!briefing.needs_attention.length &&
-          !briefing.reply_needed.length &&
-          !briefing.action_items.length) ? (
+      ) : empty || !briefing ? (
         <Card>
           <EmptyState
             title="Nothing needs you right now"
-            description="Analyze the inbox to see what deserves your attention today."
+            description="Analyze the inbox and whatever deserves your attention will collect here."
             action={
-              <Button variant="primary" onClick={analyzeInbox}>
+              <Button variant="primary" onClick={analyzeInbox} disabled={analyzing}>
                 Analyze inbox
               </Button>
             }
           />
         </Card>
       ) : (
-        <div className="space-y-4">
-          <Card className="animate-fade-up">
-            <CardHeader title="Needs attention" />
-            <CardBody>
-              <ItemList
-                items={briefing.needs_attention}
-                idKey="email_id"
-                to={(i) => `/inbox?focus=${i.email_id}`}
-              />
-            </CardBody>
-          </Card>
-
-          <Card className="animate-fade-up">
-            <CardHeader title="Reply needed" />
-            <CardBody>
-              <ItemList
-                items={briefing.reply_needed}
-                idKey="email_id"
-                to={(i) => `/inbox?focus=${i.email_id}`}
-              />
-            </CardBody>
-          </Card>
-
-          <Card className="animate-fade-up">
-            <CardHeader title="Action items" />
-            <CardBody>
-              <ItemList items={briefing.action_items} idKey="task_id" to={() => '/tasks'} />
-            </CardBody>
-          </Card>
+        <div className="space-y-3">
+          {SECTIONS.map((section) => (
+            <Section key={section.key} section={section} items={briefing[section.key]} />
+          ))}
         </div>
       )}
     </div>

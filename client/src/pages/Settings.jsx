@@ -45,7 +45,7 @@ function DeleteDialog({ onCancel, onConfirm, busy }) {
           <input
             value={typed}
             onChange={(e) => setTyped(e.target.value)}
-            className="w-full rounded-control border border-border bg-bg px-2.5 py-1.5
+            className="w-full rounded-control border border-control bg-bg px-2.5 py-1.5
                        font-mono text-xs text-text"
             aria-label="Confirmation phrase"
           />
@@ -97,7 +97,7 @@ export function Settings() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-6 py-10">
+    <div className="mx-auto max-w-2xl px-8 py-12">
       <h1 className="font-display text-xl">Settings</h1>
 
       <div className="mt-6 space-y-4">
@@ -144,7 +144,7 @@ export function Settings() {
                 max="90"
                 value={days}
                 onChange={(e) => setDays(e.target.value)}
-                className="w-20 rounded-control border border-border bg-bg px-2 py-1.5
+                className="w-20 rounded-control border border-control bg-bg px-2 py-1.5
                            font-mono text-xs text-text"
               />
               <span className="text-base text-muted">days</span>

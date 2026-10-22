@@ -46,8 +46,8 @@ export function Reader({
   const { email, tasks } = detail;
 
   return (
-    <div className="p-6">
-      <header className="border-b border-border pb-4">
+    <div className="px-8 py-7">
+      <header className="border-b border-border pb-5">
         <div className="flex items-start justify-between gap-3">
           <h1 className="font-display text-xl leading-tight">
             {email.subject || '(no subject)'}

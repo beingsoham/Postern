@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 
+import { DemoBadge } from './DemoBadge.jsx';
 import { StatusPill } from './StatusPill.jsx';
 import { cn } from './cn.js';
 
@@ -17,8 +18,11 @@ export function AppShell({ aiStatus }) {
   return (
     <div className="flex h-full">
       <aside className="flex w-52 shrink-0 flex-col border-r border-border bg-surface">
-        <div className="px-4 py-5">
+        <div className="flex items-center justify-between gap-2 px-4 py-5">
           <span className="font-display text-lg tracking-tight">Postern</span>
+          {/* Sample data is a property of the session, so it is stated once
+              here rather than repeated on every row it touches. */}
+          <DemoBadge />
         </div>
 
         <nav className="flex-1 space-y-0.5 px-2">

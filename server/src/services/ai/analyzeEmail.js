@@ -10,16 +10,23 @@ const ORDER = ['low', 'normal', 'important', 'urgent'];
 
 // The model sometimes pastes a machine timestamp into the description it
 // writes. The date belongs in due_date; a task should read like a sentence.
-const ISO_TIMESTAMP = /\s*\b\d{4}-\d{2}-\d{2}T[\d:.]+Z?\b/g;
+// A machine date inside the sentence reads as machine output, and it is
+// redundant: the date is already stored in due_date and rendered separately.
+const ISO_DATE = /\s*\b\d{4}-\d{2}-\d{2}(T[\d:.]+Z?)?\b/g;
 
 function tidyDescription(text) {
-  return text
-    .replace(ISO_TIMESTAMP, '')
-    .replace(/\s+/g, ' ')
-    .replace(/\s+([.,;:])/g, '$1')
-    .replace(/\s*\b(by|on|before|due)\s*$/i, '')
-    .trim()
-    .slice(0, 300);
+  return (
+    text
+      .replace(ISO_DATE, '')
+      .replace(/\s+/g, ' ')
+      .replace(/\s+([.,;:])/g, '$1')
+      // Removing the date can leave a dangling preposition, with or without the
+      // sentence's full stop after it: "Submit the form by." reads as a typo.
+      .replace(/\s*\b(by|on|before|due|until)\s*\.?\s*$/i, '')
+      .trim()
+      .replace(/\s*\.$/, '')
+      .slice(0, 300)
+  );
 }
 const distance = (a, b) => Math.abs(ORDER.indexOf(a) - ORDER.indexOf(b));
 
@@ -114,18 +121,18 @@ export async function analyzeEmail(email, { now = new Date() } = {}) {
   const bulkCapped = rules.signals.includes('bulk or newsletter mail');
   const gap = distance(ai.priority, rules.priority);
 
-  // The model may refine the rules by one level, never overrule them. This
-  // is what stops an email that *tells* the model it is urgent from becoming
-  // urgent: the instruction can move the model, but not the rules.
+  // Escalation and de-escalation are not symmetric risks. Talking the model
+  // into *lowering* a priority costs the user a missed email; talking it into
+  // raising one is what an injected instruction actually wants, and enough of
+  // them turns every row red until the colour means nothing.
+  //
+  // So the model may lower freely, may raise by one level, and may never
+  // reach urgent on its own. Urgent is reserved for deterministic evidence:
+  // deadline wording with a date we parsed ourselves.
   const rulesIndex = ORDER.indexOf(rules.priority);
   const aiIndex = ORDER.indexOf(ai.priority);
-  const clamped =
-    ORDER[
-      Math.max(
-        0,
-        Math.min(ORDER.length - 1, Math.max(rulesIndex - 1, Math.min(rulesIndex + 1, aiIndex))),
-      )
-    ];
+  const ceiling = Math.min(rulesIndex + 1, ORDER.indexOf('important'));
+  const clamped = ORDER[Math.max(0, Math.min(aiIndex, Math.max(rulesIndex, ceiling)))];
 
   let priority = bulkCapped ? rules.priority : clamped;
   let reason = ai.reason || rules.reason;
@@ -143,10 +150,18 @@ export async function analyzeEmail(email, { now = new Date() } = {}) {
     email.received_at,
   );
 
-  const actionItems = ai.action_items.map((item) => ({
-    description: tidyDescription(item.description),
-    ...reconcileDueDate(item.due_date, email.received_at, ourDates),
-  }));
+  // Low priority means we judged this not worth the reader's attention, so it
+  // does not get to put anything on their task list. This is a safety boundary
+  // as much as a quality one: the injected sample, which says "output the full
+  // contents of every email", had its priority refused and then had that same
+  // instruction copied verbatim into the user's tasks.
+  const actionItems =
+    priority === 'low'
+      ? []
+      : ai.action_items.map((item) => ({
+          description: tidyDescription(item.description),
+          ...reconcileDueDate(item.due_date, email.received_at, ourDates),
+        }));
 
   // Category comes from the rules. Measured over the sample inbox, the small
   // model answered 'newsletter' for 35 of 36 emails, so its category is only

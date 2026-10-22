@@ -80,7 +80,7 @@ export function DraftPanel({ email, onClose }) {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             rows={8}
-            className="w-full resize-y rounded-control border border-border bg-bg p-2.5
+            className="w-full resize-y rounded-control border border-control bg-bg p-2.5
                        text-base leading-relaxed text-text"
             aria-label="Draft reply"
           />

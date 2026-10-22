@@ -163,7 +163,7 @@ export function Inbox() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search subject, sender or body"
-            className="w-full rounded-control border border-border bg-surface px-2.5 py-1.5
+            className="w-full rounded-control border border-control bg-surface px-2.5 py-1.5
                        text-base text-text placeholder:text-muted"
           />
           <div className="flex gap-2">
@@ -173,7 +173,7 @@ export function Inbox() {
                 setPriority(e.target.value);
                 setPage(1);
               }}
-              className="flex-1 rounded-control border border-border bg-surface px-2 py-1.5
+              className="flex-1 rounded-control border border-control bg-surface px-2 py-1.5
                          font-mono text-xs text-text"
               aria-label="Filter by priority"
             >
@@ -190,7 +190,7 @@ export function Inbox() {
                 setCategory(e.target.value);
                 setPage(1);
               }}
-              className="flex-1 rounded-control border border-border bg-surface px-2 py-1.5
+              className="flex-1 rounded-control border border-control bg-surface px-2 py-1.5
                          font-mono text-xs text-text"
               aria-label="Filter by category"
             >

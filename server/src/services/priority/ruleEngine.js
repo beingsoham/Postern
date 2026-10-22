@@ -59,7 +59,10 @@ function pickCategory(haystack, bulk) {
 }
 
 function scoreToPriority(score) {
-  if (score >= 70) return 'urgent';
+  // Urgent has to stay rare to mean anything. At the previous threshold a
+  // third of the sample inbox came out urgent, which is the same as none of it
+  // being urgent. Only deadline wording AND a same-day date now clears it.
+  if (score >= 74) return 'urgent';
   if (score >= 45) return 'important';
   if (score >= 20) return 'normal';
   return 'low';
