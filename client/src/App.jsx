@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { AppShell } from './components/AppShell.jsx';
 import { useAiStatus } from './hooks/useAiStatus.js';
+import { Briefing } from './pages/Briefing.jsx';
 import { DesignSystem } from './pages/DesignSystem.jsx';
 import { Placeholder } from './pages/Placeholder.jsx';
 
@@ -12,15 +13,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route element={<AppShell aiStatus={aiStatus} />}>
-          <Route
-            index
-            element={
-              <Placeholder
-                title="Your briefing lands here"
-                description="Once the inbox is analyzed, this page opens with what needs you today."
-              />
-            }
-          />
+          <Route index element={<Briefing />} />
           <Route
             path="inbox"
             element={
